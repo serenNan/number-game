@@ -11,9 +11,10 @@ add_executable(test-cct test-cct.cpp ../cmd_console_tools.cpp)
 # 包含头文件目录
 target_include_directories(test-cct PRIVATE ${CMAKE_SOURCE_DIR}/..)
 
+# 添加字符编码选项
+target_compile_options(test-cct PRIVATE -fexec-charset=GBK -finput-charset=GBK)
+
 # 链接Windows库
 if(WIN32)
     target_link_libraries(test-cct PRIVATE winmm)
 endif()
-
-

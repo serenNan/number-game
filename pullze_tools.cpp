@@ -11,30 +11,66 @@
 int show_menu()
 {
     int choice = 0;
+    char ch;
 
     cct_cls();
     cct_setcolor();
 
-    cout << "========== 数织游戏 ==========" << endl;
-    cout << "1. 文本模式 - 初始化矩阵并打印" << endl;
-    cout << "2. 文本模式 - 生成行/列提示栏并打印" << endl;
-    cout << "3. 文本模式 - 完整游戏" << endl;
-    cout << "4. 图形模式(无分隔线) - 初始状态" << endl;
-    cout << "5. 图形模式(无分隔线) - 含提示栏" << endl;
-    cout << "6. 图形模式(无分隔线) - 鼠标移动" << endl;
-    cout << "7. 图形模式(无分隔线) - 完整游戏" << endl;
-    cout << "8. 图形模式(有分隔线) - 初始状态" << endl;
-    cout << "9. 图形模式(有分隔线) - 含提示栏" << endl;
-    cout << "10. 图形模式(有分隔线) - 鼠标移动" << endl;
-    cout << "11. 图形模式(有分隔线) - 完整游戏" << endl;
-    cout << "0. 退出" << endl;
-    cout << "请选择: ";
+    cout << "---------------------------------------------------------" << endl;
+    cout << " A.内部数组，原样输出" << endl;
+    cout << " B.内部数组，生成提示行列并输出" << endl;
+    cout << " C.内部数组，游戏版" << endl;
+    cout << " --------------------------------------------------------" << endl;
+    cout << " D.n*n的框架(无分隔线)，原样输出" << endl;
+    cout << " E.n*n的框架(无分隔线)，含提示行列" << endl;
+    cout << " F.n*n的框架(无分隔线)，显示初始状态，鼠标移动可显示坐标" << endl;
+    cout << " G.cmd图形界面完整版(无分隔线)" << endl;
+    cout << " --------------------------------------------------------" << endl;
+    cout << " H.n*n的框架(有分隔线)，原样输出" << endl;
+    cout << " I.n*n的框架(有分隔线)，含提示行列" << endl;
+    cout << " J.n*n的框架(有分隔线)，显示初始状态，鼠标移动可显示坐标" << endl;
+    cout << " K.cmd图形界面完整版(有分隔线)" << endl;
+    cout << " --------------------------------------------------------" << endl;
+    cout << " Q.退出" << endl;
+    cout << "---------------------------------------------------------" << endl;
+    cout << "[请选择:]  ";
 
-    while (!(cin >> choice) || choice < 0 || choice > 11)
+    while (1)
     {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "输入错误，请重新选择: ";
+        ch = _getch();
+
+        if (ch >= 'a' && ch <= 'k')
+            ch = ch - 'a' + 'A';
+
+        if (ch == 'A')
+            choice = 1;
+        else if (ch == 'B')
+            choice = 2;
+        else if (ch == 'C')
+            choice = 3;
+        else if (ch == 'D')
+            choice = 4;
+        else if (ch == 'E')
+            choice = 5;
+        else if (ch == 'F')
+            choice = 6;
+        else if (ch == 'G')
+            choice = 7;
+        else if (ch == 'H')
+            choice = 8;
+        else if (ch == 'I')
+            choice = 9;
+        else if (ch == 'J')
+            choice = 10;
+        else if (ch == 'K')
+            choice = 11;
+        else if (ch == 'Q' || ch == 'q')
+            choice = 0;
+        else
+            continue;
+
+        cout << ch << endl;
+        break;
     }
 
     return choice;

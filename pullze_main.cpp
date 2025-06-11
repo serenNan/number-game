@@ -30,7 +30,7 @@ int main()
 
         switch (choice)
         {
-        case 1: // 文本模式-初始化矩阵并打印
+        case 1: // A.内部数组，原样输出
             params.has_separators = false;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -42,7 +42,7 @@ int main()
             }
             break;
 
-        case 2: // 文本模式-生成行/列提示栏并打印
+        case 2: // B.内部数组，生成提示行列并输出
             params.has_separators = false;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -56,7 +56,7 @@ int main()
             }
             break;
 
-        case 3: // 文本模式-完整游戏
+        case 3: // C.内部数组，游戏版
             params.has_separators = false;
             if (get_game_params(params))
             {
@@ -67,7 +67,7 @@ int main()
             }
             break;
 
-        case 4: // 图形模式无分隔线-初始状态
+        case 4: // D.n*n的框架(无分隔线)，原样输出
             params.has_separators = false;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -79,7 +79,7 @@ int main()
             }
             break;
 
-        case 5: // 图形模式无分隔线-含提示栏
+        case 5: // E.n*n的框架(无分隔线)，含提示行列
             params.has_separators = false;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -92,10 +92,9 @@ int main()
             }
             break;
 
-        case 6: // 图形模式无分隔线-鼠标移动
-        case 7: // 图形模式无分隔线-完整游戏
+        case 6: // F.n*n的框架(无分隔线)，显示初始状态，鼠标移动可显示坐标
             params.has_separators = false;
-            params.cheat_mode = (choice == 6);
+            params.cheat_mode = true;
             if (get_game_params(params))
             {
                 init_game(matrix, params);
@@ -105,7 +104,19 @@ int main()
             }
             break;
 
-        case 8: // 图形模式有分隔线-初始状态
+        case 7: // G.cmd图形界面完整版(无分隔线)
+            params.has_separators = false;
+            params.cheat_mode = false;
+            if (get_game_params(params))
+            {
+                init_game(matrix, params);
+                generate_matrix(matrix, params);
+                calculate_hints(matrix, params);
+                play_game_graphic_mode(matrix, params);
+            }
+            break;
+
+        case 8: // H.n*n的框架(有分隔线)，原样输出
             params.has_separators = true;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -117,7 +128,7 @@ int main()
             }
             break;
 
-        case 9: // 图形模式有分隔线-含提示栏
+        case 9: // I.n*n的框架(有分隔线)，含提示行列
             params.has_separators = true;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -130,10 +141,9 @@ int main()
             }
             break;
 
-        case 10: // 图形模式有分隔线-鼠标移动
-        case 11: // 图形模式有分隔线-完整游戏
+        case 10: // J.n*n的框架(有分隔线)，显示初始状态，鼠标移动可显示坐标
             params.has_separators = true;
-            params.cheat_mode = (choice == 10);
+            params.cheat_mode = true;
             if (get_game_params(params))
             {
                 init_game(matrix, params);
@@ -143,7 +153,19 @@ int main()
             }
             break;
 
-        case 0: // 退出
+        case 11: // K.cmd图形界面完整版(有分隔线)
+            params.has_separators = true;
+            params.cheat_mode = false;
+            if (get_game_params(params))
+            {
+                init_game(matrix, params);
+                generate_matrix(matrix, params);
+                calculate_hints(matrix, params);
+                play_game_graphic_mode(matrix, params);
+            }
+            break;
+
+        case 0: // Q.退出
             quit = true;
             break;
 

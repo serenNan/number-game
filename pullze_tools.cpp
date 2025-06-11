@@ -155,6 +155,10 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         for (int j = 0; j < params.cols; j++)
         {
             cout << "-";
+            if ((j + 1) % 5 == 0 && j < params.cols - 1)
+            {
+                cout << "-";
+            }
         }
         cout << "-----------+" << endl;
 
@@ -162,6 +166,10 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         for (int j = 0; j < params.cols; j++)
         {
             cout << " " << (char)('a' + j);
+            if ((j + 1) % 5 == 0 && j < params.cols - 1)
+            {
+                cout << " |";
+            }
         }
         cout << " |" << endl;
 
@@ -169,6 +177,10 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         for (int j = 0; j < params.cols; j++)
         {
             cout << "-";
+            if ((j + 1) % 5 == 0 && j < params.cols - 1)
+            {
+                cout << "-";
+            }
         }
         cout << "-----------+" << endl;
 
@@ -199,8 +211,29 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                 {
                     cout << " ·";
                 }
+
+                // 每5列添加一个分隔符
+                if ((j + 1) % 5 == 0 && j < params.cols - 1)
+                {
+                    cout << " |";
+                }
             }
             cout << " |" << endl;
+
+            // 每5行添加一个分隔线
+            if ((i + 1) % 5 == 0 && i < params.rows - 1)
+            {
+                cout << "+-+";
+                for (int j = 0; j < params.cols; j++)
+                {
+                    cout << "-";
+                    if ((j + 1) % 5 == 0 && j < params.cols - 1)
+                    {
+                        cout << "-";
+                    }
+                }
+                cout << "-----------+" << endl;
+            }
         }
 
         // 显示底部边框
@@ -208,11 +241,15 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         for (int j = 0; j < params.cols; j++)
         {
             cout << "-";
+            if ((j + 1) % 5 == 0 && j < params.cols - 1)
+            {
+                cout << "-";
+            }
         }
         cout << "-----------+" << endl;
 
         // 用户输入
-        cout << "\n输入坐标(如A1)标记球的位置，输入Q退出，输入C提交: ";
+        cout << "\n输入坐标(如Aa)标记球的位置，输入Q退出，输入C提交: ";
         char input[10];
         cin >> input;
 
@@ -233,8 +270,8 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
             }
             else
             {
-                cout << "解答错误，第一个错误位置：" << (char)('A' + error_row) << (error_col + 1)
-                     << endl;
+                cout << "解答错误，第一个错误位置：" << (char)('A' + error_row)
+                     << (char)('a' + error_col) << endl;
                 system("pause");
             }
         }

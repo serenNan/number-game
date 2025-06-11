@@ -18,6 +18,10 @@ void display_matrix_text(const GameMatrix &matrix, const GameParams &params)
     for (int j = 0; j < params.cols; j++)
     {
         cout << "-";
+        if ((j + 1) % 5 == 0 && j < params.cols - 1)
+        {
+            cout << "-";
+        }
     }
     cout << "-----------+" << endl;
 
@@ -25,6 +29,10 @@ void display_matrix_text(const GameMatrix &matrix, const GameParams &params)
     for (int j = 0; j < params.cols; j++)
     {
         cout << " " << (char)('a' + j);
+        if ((j + 1) % 5 == 0 && j < params.cols - 1)
+        {
+            cout << " |";
+        }
     }
     cout << " |" << endl;
 
@@ -32,6 +40,10 @@ void display_matrix_text(const GameMatrix &matrix, const GameParams &params)
     for (int j = 0; j < params.cols; j++)
     {
         cout << "-";
+        if ((j + 1) % 5 == 0 && j < params.cols - 1)
+        {
+            cout << "-";
+        }
     }
     cout << "-----------+" << endl;
 
@@ -52,8 +64,29 @@ void display_matrix_text(const GameMatrix &matrix, const GameParams &params)
             {
                 cout << "  ";
             }
+
+            // 每5列添加一个分隔符
+            if ((j + 1) % 5 == 0 && j < params.cols - 1)
+            {
+                cout << " |";
+            }
         }
         cout << " |" << endl;
+
+        // 每5行添加一个分隔线
+        if ((i + 1) % 5 == 0 && i < params.rows - 1)
+        {
+            cout << "+-+";
+            for (int j = 0; j < params.cols; j++)
+            {
+                cout << "-";
+                if ((j + 1) % 5 == 0 && j < params.cols - 1)
+                {
+                    cout << "-";
+                }
+            }
+            cout << "-----------+" << endl;
+        }
     }
 
     // 显示底部边框
@@ -61,6 +94,10 @@ void display_matrix_text(const GameMatrix &matrix, const GameParams &params)
     for (int j = 0; j < params.cols; j++)
     {
         cout << "-";
+        if ((j + 1) % 5 == 0 && j < params.cols - 1)
+        {
+            cout << "-";
+        }
     }
     cout << "-----------+" << endl;
 }

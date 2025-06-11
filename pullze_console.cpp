@@ -120,159 +120,190 @@ void display_hints_text(const GameMatrix &matrix, const GameParams &params)
 
     cout << "初始数组：" << endl;
 
-    // 显示列提示
-    cout << "-------+";
-    for (int j = 0; j < params.cols; j++)
-    {
-        cout << "-";
-        if ((j + 1) % 5 == 0 && j < params.cols - 1)
-        {
-            cout << "-";
-        }
-    }
-    cout << "-----------+" << endl;
-
-    cout << "       |";
-    for (int j = 0; j < params.cols; j++)
-    {
-        if (matrix.col_hint_count[j] > 0)
-        {
-            cout << " " << matrix.col_hints[j][0];
-        }
-        else
-        {
-            cout << "  ";
-        }
-        if ((j + 1) % 5 == 0 && j < params.cols - 1)
-        {
-            cout << " |";
-        }
-    }
-    cout << " |" << endl;
-
-    cout << "       |";
-    for (int j = 0; j < params.cols; j++)
-    {
-        if (matrix.col_hint_count[j] > 1)
-        {
-            cout << " " << matrix.col_hints[j][1];
-        }
-        else
-        {
-            cout << "  ";
-        }
-        if ((j + 1) % 5 == 0 && j < params.cols - 1)
-        {
-            cout << " |";
-        }
-    }
-    cout << " |" << endl;
-
-    cout << "-------+";
-    for (int j = 0; j < params.cols; j++)
-    {
-        cout << "-";
-        if ((j + 1) % 5 == 0 && j < params.cols - 1)
-        {
-            cout << "-";
-        }
-    }
-    cout << "-----------+" << endl;
-
-    cout << "       |";
-    for (int j = 0; j < params.cols; j++)
-    {
-        cout << " " << (char)('a' + j);
-        if ((j + 1) % 5 == 0 && j < params.cols - 1)
-        {
-            cout << " |";
-        }
-    }
-    cout << " |" << endl;
-
-    cout << "-----+-+";
-    for (int j = 0; j < params.cols; j++)
-    {
-        cout << "-";
-        if ((j + 1) % 5 == 0 && j < params.cols - 1)
-        {
-            cout << "-";
-        }
-    }
-    cout << "-----------+" << endl;
-
-    // 显示矩阵内容和行提示
+    // 计算行提示的最大数量
+    int max_row_hints = 0;
     for (int i = 0; i < params.rows; i++)
     {
-        // 显示行提示
-        if (matrix.row_hint_count[i] == 1)
+        if (matrix.row_hint_count[i] > max_row_hints)
         {
-            cout << "   " << matrix.row_hints[i][0] << " |";
+            max_row_hints = matrix.row_hint_count[i];
         }
-        else if (matrix.row_hint_count[i] == 2)
-        {
-            cout << " " << matrix.row_hints[i][0] << " " << matrix.row_hints[i][1] << " |";
-        }
-        else if (matrix.row_hint_count[i] == 3)
-        {
-            cout << matrix.row_hints[i][0] << " " << matrix.row_hints[i][1] << " "
-                 << matrix.row_hints[i][2] << " |";
-        }
-        else
-        {
-            cout << "     |";
-        }
+    }
 
-        // 显示行标题（A,B,C,...）
-        cout << (char)('A' + i) << "|";
+    // 计算每个行提示占用的宽度，每个数字2个字符（数字+空格）
+    int hint_width = max_row_hints * 2;
 
-        for (int j = 0; j < params.cols; j++)
+    // 显示顶部边框
+    cout << string(hint_width + 1, '-') << "+-----------+-----------+" << endl;
+
+    // 计算列提示的最大高度
+    int max_col_hints = 0;
+    for (int j = 0; j < params.cols; j++)
+    {
+        if (matrix.col_hint_count[j] > max_col_hints)
         {
-            // 根据作弊模式显示单元格内容
-            if (params.cheat_mode && matrix.solution[i][j])
+            max_col_hints = matrix.col_hint_count[j];
+        }
+    }
+
+    // 显示列提示（从上往下）
+    for (int h = 0; h < max_col_hints; h++)
+    {
+        cout << string(hint_width + 1, ' ') << "|";
+
+        // 第一组5列
+        for (int j = 0; j < 5; j++)
+        {
+            if (j < params.cols && h < matrix.col_hint_count[j])
             {
-                cout << " O";
+                cout << " " << matrix.col_hints[j][h];
             }
             else
             {
                 cout << "  ";
             }
+        }
 
-            // 每5列添加一个分隔符
-            if ((j + 1) % 5 == 0 && j < params.cols - 1)
+        cout << " |";
+
+        // 第二组5列
+        for (int j = 5; j < 10; j++)
+        {
+            if (j < params.cols && h < matrix.col_hint_count[j])
             {
-                cout << " |";
+                cout << " " << matrix.col_hints[j][h];
+            }
+            else
+            {
+                cout << "  ";
             }
         }
+
+        cout << " |" << endl;
+    }
+
+    // 显示分隔线
+    cout << string(hint_width + 1, '-') << "+-----------+-----------+" << endl;
+
+    // 显示列标题
+    cout << string(hint_width + 1, ' ') << "|";
+
+    // 第一组5列
+    for (int j = 0; j < 5; j++)
+    {
+        if (j < params.cols)
+        {
+            cout << " " << (char)('a' + j);
+        }
+        else
+        {
+            cout << "  ";
+        }
+    }
+
+    cout << " |";
+
+    // 第二组5列
+    for (int j = 5; j < 10; j++)
+    {
+        if (j < params.cols)
+        {
+            cout << " " << (char)('a' + j);
+        }
+        else
+        {
+            cout << "  ";
+        }
+    }
+
+    cout << " |" << endl;
+
+    // 显示行提示区域和矩阵的分隔线
+    for (int i = 0; i < hint_width - 1; i++)
+    {
+        cout << "-";
+    }
+    cout << "---+-+-----------+-----------+" << endl;
+
+    // 显示矩阵内容和行提示
+    for (int i = 0; i < params.rows; i++)
+    {
+        // 显示行提示，右对齐
+        string row_hint_str = "";
+        for (int h = 0; h < matrix.row_hint_count[i]; h++)
+        {
+            row_hint_str += to_string(matrix.row_hints[i][h]) + " ";
+        }
+
+        // 确保行提示区域宽度一致
+        cout << setw(hint_width) << right << row_hint_str << " |";
+
+        // 显示行标题（A,B,C,...）
+        cout << (char)('A' + i) << "|";
+
+        // 第一组5列
+        for (int j = 0; j < 5; j++)
+        {
+            if (j < params.cols)
+            {
+                // 根据作弊模式显示单元格内容
+                if (params.cheat_mode && matrix.solution[i][j])
+                {
+                    cout << " O";
+                }
+                else
+                {
+                    cout << "  ";
+                }
+            }
+            else
+            {
+                cout << "  ";
+            }
+        }
+
+        cout << " |";
+
+        // 第二组5列
+        for (int j = 5; j < 10; j++)
+        {
+            if (j < params.cols)
+            {
+                // 根据作弊模式显示单元格内容
+                if (params.cheat_mode && matrix.solution[i][j])
+                {
+                    cout << " O";
+                }
+                else
+                {
+                    cout << "  ";
+                }
+            }
+            else
+            {
+                cout << "  ";
+            }
+        }
+
         cout << " |" << endl;
 
         // 每5行添加一个分隔线
         if ((i + 1) % 5 == 0 && i < params.rows - 1)
         {
-            cout << "-----+-+";
-            for (int j = 0; j < params.cols; j++)
+            for (int k = 0; k < hint_width - 1; k++)
             {
                 cout << "-";
-                if ((j + 1) % 5 == 0 && j < params.cols - 1)
-                {
-                    cout << "-";
-                }
             }
-            cout << "-----------+" << endl;
+            cout << "---+-+-----------+-----------+" << endl;
         }
     }
 
     // 显示底部边框
-    cout << "-----+-+";
-    for (int j = 0; j < params.cols; j++)
+    for (int i = 0; i < hint_width - 1; i++)
     {
         cout << "-";
-        if ((j + 1) % 5 == 0 && j < params.cols - 1)
-        {
-            cout << "-";
-        }
     }
-    cout << "-----------+" << endl;
+    cout << "---+-+-----------+-----------+" << endl;
 }
 
 /***************************************************************************

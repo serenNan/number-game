@@ -13,75 +13,56 @@ void display_matrix_text(const GameMatrix &matrix, const GameParams &params)
     // 清屏
     cct_cls();
 
-    // 显示列标题（1,2,3,...）
-    cout << "  ";
+    // 显示顶部边框和列标题
+    cout << "+-+";
     for (int j = 0; j < params.cols; j++)
     {
-        cout << " " << (j + 1);
-        // 每5列添加一个分隔符
-        if ((j + 1) % 5 == 0 && j < params.cols - 1)
-        {
-            cout << " |";
-        }
+        cout << "-";
     }
-    cout << endl;
+    cout << "-----------+" << endl;
 
-    // 显示横向分隔线
-    cout << "  ";
+    cout << "| |";
     for (int j = 0; j < params.cols; j++)
     {
-        cout << "--";
-        // 每5列添加一个分隔符
-        if ((j + 1) % 5 == 0 && j < params.cols - 1)
-        {
-            cout << "-+";
-        }
+        cout << " " << (char)('a' + j);
     }
-    cout << endl;
+    cout << " |" << endl;
+
+    cout << "+-+";
+    for (int j = 0; j < params.cols; j++)
+    {
+        cout << "-";
+    }
+    cout << "-----------+" << endl;
 
     // 显示矩阵内容
     for (int i = 0; i < params.rows; i++)
     {
         // 显示行标题（A,B,C,...）
-        cout << (char)('A' + i) << " |";
+        cout << "|" << (char)('A' + i) << "|";
 
         for (int j = 0; j < params.cols; j++)
         {
             // 根据作弊模式显示单元格内容
             if (params.cheat_mode && matrix.solution[i][j])
             {
-                cout << "0 ";
+                cout << " O";
             }
             else
             {
                 cout << "  ";
             }
-
-            // 每5列添加一个分隔符
-            if ((j + 1) % 5 == 0 && j < params.cols - 1)
-            {
-                cout << "|";
-            }
         }
-        cout << endl;
-
-        // 每5行添加一个分隔线
-        if ((i + 1) % 5 == 0 && i < params.rows - 1)
-        {
-            cout << "  ";
-            for (int j = 0; j < params.cols; j++)
-            {
-                cout << "--";
-                // 在分隔线交叉处使用不同的符号
-                if ((j + 1) % 5 == 0 && j < params.cols - 1)
-                {
-                    cout << "+";
-                }
-            }
-            cout << endl;
-        }
+        cout << " |" << endl;
     }
-    cout << endl;
+
+    // 显示底部边框
+    cout << "+-+";
+    for (int j = 0; j < params.cols; j++)
+    {
+        cout << "-";
+    }
+    cout << "-----------+" << endl;
 }
 
 /***************************************************************************
@@ -94,7 +75,7 @@ void display_matrix_text(const GameMatrix &matrix, const GameParams &params)
 ***************************************************************************/
 void display_hints_text(const GameMatrix &matrix, const GameParams &params)
 {
-    cout << "行提示栏：" << endl;
+    cout << "行提示：" << endl;
     for (int i = 0; i < params.rows; i++)
     {
         cout << (char)('A' + i) << ": ";
@@ -105,10 +86,10 @@ void display_hints_text(const GameMatrix &matrix, const GameParams &params)
         cout << endl;
     }
 
-    cout << "\n列提示栏：" << endl;
+    cout << "\n列提示：" << endl;
     for (int j = 0; j < params.cols; j++)
     {
-        cout << (j + 1) << ": ";
+        cout << (char)('a' + j) << ": ";
         for (int h = 0; h < matrix.col_hint_count[j]; h++)
         {
             cout << matrix.col_hints[j][h] << " ";

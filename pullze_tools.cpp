@@ -86,21 +86,38 @@ int show_menu()
 bool get_game_params(GameParams &params)
 {
     cct_cls();
+    int choice = 0;
+    char ch;
 
-    cout << "请输入行数 (5-" << MAX_MATRIX_SIZE << "): ";
-    while (!(cin >> params.rows) || params.rows < 5 || params.rows > MAX_MATRIX_SIZE)
+    cout << "请选择游戏大小：" << endl;
+    cout << "1. 5×5" << endl;
+    cout << "2. 10×10" << endl;
+    cout << "3. 15×15" << endl;
+    cout << "请选择[1-3]：";
+
+    while (1)
     {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "输入错误，请重新输入行数 (5-" << MAX_MATRIX_SIZE << "): ";
+        ch = _getch();
+
+        if (ch >= '1' && ch <= '3')
+        {
+            choice = ch - '0';
+            cout << ch << endl;
+            break;
+        }
     }
 
-    cout << "请输入列数 (5-" << MAX_MATRIX_SIZE << "): ";
-    while (!(cin >> params.cols) || params.cols < 5 || params.cols > MAX_MATRIX_SIZE)
+    switch (choice)
     {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "输入错误，请重新输入列数 (5-" << MAX_MATRIX_SIZE << "): ";
+    case 1:
+        params.rows = params.cols = 5;
+        break;
+    case 2:
+        params.rows = params.cols = 10;
+        break;
+    case 3:
+        params.rows = params.cols = 15;
+        break;
     }
 
     // 询问作弊模式（如果菜单选项没有预设）
@@ -133,36 +150,66 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         cct_cls();
         display_hints_text(matrix, params);
 
-        // 显示当前状态
+        // 显示顶部边框和列标题
+        cout << "+-+";
+        for (int j = 0; j < params.cols; j++)
+        {
+            cout << "-";
+        }
+        cout << "-----------+" << endl;
+
+        cout << "| |";
+        for (int j = 0; j < params.cols; j++)
+        {
+            cout << " " << (char)('a' + j);
+        }
+        cout << " |" << endl;
+
+        cout << "+-+";
+        for (int j = 0; j < params.cols; j++)
+        {
+            cout << "-";
+        }
+        cout << "-----------+" << endl;
+
+        // 显示矩阵内容
         for (int i = 0; i < params.rows; i++)
         {
-            cout << (char)('A' + i) << ": ";
+            // 显示行标题（A,B,C,...）
+            cout << "|" << (char)('A' + i) << "|";
+
             for (int j = 0; j < params.cols; j++)
             {
                 if (matrix.cells[i][j] == EMPTY)
                 {
-                    cout << ". ";
+                    if (params.cheat_mode && matrix.solution[i][j])
+                        cout << " O";
+                    else
+                        cout << "  ";
                 }
                 else if (matrix.cells[i][j] == MARKED)
                 {
-                    cout << "0 ";
+                    cout << " O";
                 }
                 else if (matrix.cells[i][j] == MARKED_WRONG)
                 {
-                    cout << "X ";
+                    cout << " X";
                 }
                 else if (matrix.cells[i][j] == MARKED_NOT)
                 {
-                    cout << "· ";
-                }
-
-                if (params.cheat_mode && matrix.solution[i][j] && matrix.cells[i][j] == EMPTY)
-                {
-                    cout << "0 ";
+                    cout << " ·";
                 }
             }
-            cout << endl;
+            cout << " |" << endl;
         }
+
+        // 显示底部边框
+        cout << "+-+";
+        for (int j = 0; j < params.cols; j++)
+        {
+            cout << "-";
+        }
+        cout << "-----------+" << endl;
 
         // 用户输入
         cout << "\n输入坐标(如A1)标记球的位置，输入Q退出，输入C提交: ";
@@ -191,12 +238,12 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                 system("pause");
             }
         }
-        else if (input[0] >= 'A' && input[0] <= 'A' + params.rows - 1 && input[1] >= '1' &&
-                 input[1] <= '9')
+        else if (input[0] >= 'A' && input[0] <= 'A' + params.rows - 1 && input[1] >= 'a' &&
+                 input[1] <= 'a' + params.cols - 1)
         {
             // 解析坐标
             int row = input[0] - 'A';
-            int col = atoi(input + 1) - 1;
+            int col = input[1] - 'a';
 
             // 检查坐标有效性
             if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)

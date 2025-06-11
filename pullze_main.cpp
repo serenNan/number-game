@@ -1,36 +1,36 @@
 #include "pullze.h"
 
 /***************************************************************************
-  å‡½æ•°åç§°ï¼šmain
-  åŠŸ    èƒ½ï¼šä¸»å‡½æ•°
-  è¾“å…¥å‚æ•°ï¼šæ— 
-  è¿” å› å€¼ï¼š0-æ­£å¸¸ç»“æŸ
-  è¯´    æ˜ï¼šç¨‹åºçš„å…¥å£ç‚¹
+  º¯ÊıÃû³Æ£ºmain
+  ¹¦    ÄÜ£ºÖ÷º¯Êı
+  ÊäÈë²ÎÊı£ºÎŞ
+  ·µ »Ø Öµ£º0-Õı³£½áÊø
+  Ëµ    Ã÷£º³ÌĞòµÄÈë¿Úµã
 ***************************************************************************/
 int main()
 {
-    // åˆå§‹åŒ–éšæœºæ•°ç”Ÿæˆå™¨
+    // ³õÊ¼»¯Ëæ»úÊıÉú³ÉÆ÷
     srand((unsigned int)time(0));
 
-    // è®¾ç½®æ§åˆ¶å°å±æ€§
+    // ÉèÖÃ¿ØÖÆÌ¨ÊôĞÔ
     cct_setconsoleborder(120, 40);
-    cct_setfontsize("æ–°å®‹ä½“", 16);
-    cct_setcursor(CURSOR_INVISIBLE); // éšè—å…‰æ ‡
+    cct_setfontsize("ĞÂËÎÌå", 16);
+    cct_setcursor(CURSOR_INVISIBLE); // Òş²Ø¹â±ê
 
-    // æ¸¸æˆå‚æ•°å’ŒçŸ©é˜µ
+    // ÓÎÏ·²ÎÊıºÍ¾ØÕó
     GameParams params;
     GameMatrix matrix;
 
-    // ä¸»å¾ªç¯
+    // Ö÷Ñ­»·
     bool quit = false;
     while (!quit)
     {
-        // æ˜¾ç¤ºèœå•å¹¶è·å–é€‰æ‹©
+        // ÏÔÊ¾²Ëµ¥²¢»ñÈ¡Ñ¡Ôñ
         int choice = show_menu();
 
         switch (choice)
         {
-        case 1: // æ–‡æœ¬æ¨¡å¼-åˆå§‹åŒ–çŸ©é˜µå¹¶æ‰“å°
+        case 1: // ÎÄ±¾Ä£Ê½-³õÊ¼»¯¾ØÕó²¢´òÓ¡
             params.has_separators = false;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -42,7 +42,7 @@ int main()
             }
             break;
 
-        case 2: // æ–‡æœ¬æ¨¡å¼-ç”Ÿæˆè¡Œ/åˆ—æç¤ºæ å¹¶æ‰“å°
+        case 2: // ÎÄ±¾Ä£Ê½-Éú³ÉĞĞ/ÁĞÌáÊ¾À¸²¢´òÓ¡
             params.has_separators = false;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -56,7 +56,7 @@ int main()
             }
             break;
 
-        case 3: // æ–‡æœ¬æ¨¡å¼-å®Œæ•´æ¸¸æˆ
+        case 3: // ÎÄ±¾Ä£Ê½-ÍêÕûÓÎÏ·
             params.has_separators = false;
             if (get_game_params(params))
             {
@@ -67,7 +67,7 @@ int main()
             }
             break;
 
-        case 4: // å›¾å½¢æ¨¡å¼æ— åˆ†éš”çº¿-åˆå§‹çŠ¶æ€
+        case 4: // Í¼ĞÎÄ£Ê½ÎŞ·Ö¸ôÏß-³õÊ¼×´Ì¬
             params.has_separators = false;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -79,7 +79,7 @@ int main()
             }
             break;
 
-        case 5: // å›¾å½¢æ¨¡å¼æ— åˆ†éš”çº¿-å«æç¤ºæ 
+        case 5: // Í¼ĞÎÄ£Ê½ÎŞ·Ö¸ôÏß-º¬ÌáÊ¾À¸
             params.has_separators = false;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -92,8 +92,8 @@ int main()
             }
             break;
 
-        case 6: // å›¾å½¢æ¨¡å¼æ— åˆ†éš”çº¿-é¼ æ ‡ç§»åŠ¨
-        case 7: // å›¾å½¢æ¨¡å¼æ— åˆ†éš”çº¿-å®Œæ•´æ¸¸æˆ
+        case 6: // Í¼ĞÎÄ£Ê½ÎŞ·Ö¸ôÏß-Êó±êÒÆ¶¯
+        case 7: // Í¼ĞÎÄ£Ê½ÎŞ·Ö¸ôÏß-ÍêÕûÓÎÏ·
             params.has_separators = false;
             params.cheat_mode = (choice == 6);
             if (get_game_params(params))
@@ -105,7 +105,7 @@ int main()
             }
             break;
 
-        case 8: // å›¾å½¢æ¨¡å¼æœ‰åˆ†éš”çº¿-åˆå§‹çŠ¶æ€
+        case 8: // Í¼ĞÎÄ£Ê½ÓĞ·Ö¸ôÏß-³õÊ¼×´Ì¬
             params.has_separators = true;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -117,7 +117,7 @@ int main()
             }
             break;
 
-        case 9: // å›¾å½¢æ¨¡å¼æœ‰åˆ†éš”çº¿-å«æç¤ºæ 
+        case 9: // Í¼ĞÎÄ£Ê½ÓĞ·Ö¸ôÏß-º¬ÌáÊ¾À¸
             params.has_separators = true;
             params.cheat_mode = true;
             if (get_game_params(params))
@@ -130,8 +130,8 @@ int main()
             }
             break;
 
-        case 10: // å›¾å½¢æ¨¡å¼æœ‰åˆ†éš”çº¿-é¼ æ ‡ç§»åŠ¨
-        case 11: // å›¾å½¢æ¨¡å¼æœ‰åˆ†éš”çº¿-å®Œæ•´æ¸¸æˆ
+        case 10: // Í¼ĞÎÄ£Ê½ÓĞ·Ö¸ôÏß-Êó±êÒÆ¶¯
+        case 11: // Í¼ĞÎÄ£Ê½ÓĞ·Ö¸ôÏß-ÍêÕûÓÎÏ·
             params.has_separators = true;
             params.cheat_mode = (choice == 10);
             if (get_game_params(params))
@@ -143,7 +143,7 @@ int main()
             }
             break;
 
-        case 0: // é€€å‡º
+        case 0: // ÍË³ö
             quit = true;
             break;
 
@@ -151,7 +151,7 @@ int main()
             break;
         }
 
-        // æ¸…å±ä»¥å‡†å¤‡ä¸‹ä¸€æ¬¡æ˜¾ç¤º
+        // ÇåÆÁÒÔ×¼±¸ÏÂÒ»´ÎÏÔÊ¾
         cct_cls();
     }
 

@@ -2,11 +2,11 @@
 #include <Windows.h>
 
 /***************************************************************************
-  å‡½æ•°åç§°ï¼šshow_menu
-  åŠŸ    èƒ½ï¼šæ˜¾ç¤ºæ¸¸æˆèœå•å¹¶è·å–ç”¨æˆ·é€‰æ‹©
-  è¾“å…¥å‚æ•°ï¼šæ— 
-  è¿” å› å€¼ï¼šint - ç”¨æˆ·é€‰æ‹©çš„èœå•é¡¹
-  è¯´    æ˜ï¼šæ˜¾ç¤ºèœå•å¹¶è¿”å›ç”¨æˆ·é€‰æ‹©
+  º¯ÊıÃû³Æ£ºshow_menu
+  ¹¦    ÄÜ£ºÏÔÊ¾ÓÎÏ·²Ëµ¥²¢»ñÈ¡ÓÃ»§Ñ¡Ôñ
+  ÊäÈë²ÎÊı£ºÎŞ
+  ·µ »Ø Öµ£ºint - ÓÃ»§Ñ¡ÔñµÄ²Ëµ¥Ïî
+  Ëµ    Ã÷£ºÏÔÊ¾²Ëµ¥²¢·µ»ØÓÃ»§Ñ¡Ôñ
 ***************************************************************************/
 int show_menu()
 {
@@ -15,63 +15,63 @@ int show_menu()
     cct_cls();
     cct_setcolor();
 
-    cout << "========== æ•°ç»‡æ¸¸æˆ ==========" << endl;
-    cout << "1. æ–‡æœ¬æ¨¡å¼ - åˆå§‹åŒ–çŸ©é˜µå¹¶æ‰“å°" << endl;
-    cout << "2. æ–‡æœ¬æ¨¡å¼ - ç”Ÿæˆè¡Œ/åˆ—æç¤ºæ å¹¶æ‰“å°" << endl;
-    cout << "3. æ–‡æœ¬æ¨¡å¼ - å®Œæ•´æ¸¸æˆ" << endl;
-    cout << "4. å›¾å½¢æ¨¡å¼(æ— åˆ†éš”çº¿) - åˆå§‹çŠ¶æ€" << endl;
-    cout << "5. å›¾å½¢æ¨¡å¼(æ— åˆ†éš”çº¿) - å«æç¤ºæ " << endl;
-    cout << "6. å›¾å½¢æ¨¡å¼(æ— åˆ†éš”çº¿) - é¼ æ ‡ç§»åŠ¨" << endl;
-    cout << "7. å›¾å½¢æ¨¡å¼(æ— åˆ†éš”çº¿) - å®Œæ•´æ¸¸æˆ" << endl;
-    cout << "8. å›¾å½¢æ¨¡å¼(æœ‰åˆ†éš”çº¿) - åˆå§‹çŠ¶æ€" << endl;
-    cout << "9. å›¾å½¢æ¨¡å¼(æœ‰åˆ†éš”çº¿) - å«æç¤ºæ " << endl;
-    cout << "10. å›¾å½¢æ¨¡å¼(æœ‰åˆ†éš”çº¿) - é¼ æ ‡ç§»åŠ¨" << endl;
-    cout << "11. å›¾å½¢æ¨¡å¼(æœ‰åˆ†éš”çº¿) - å®Œæ•´æ¸¸æˆ" << endl;
-    cout << "0. é€€å‡º" << endl;
-    cout << "è¯·é€‰æ‹©: ";
+    cout << "========== ÊıÖ¯ÓÎÏ· ==========" << endl;
+    cout << "1. ÎÄ±¾Ä£Ê½ - ³õÊ¼»¯¾ØÕó²¢´òÓ¡" << endl;
+    cout << "2. ÎÄ±¾Ä£Ê½ - Éú³ÉĞĞ/ÁĞÌáÊ¾À¸²¢´òÓ¡" << endl;
+    cout << "3. ÎÄ±¾Ä£Ê½ - ÍêÕûÓÎÏ·" << endl;
+    cout << "4. Í¼ĞÎÄ£Ê½(ÎŞ·Ö¸ôÏß) - ³õÊ¼×´Ì¬" << endl;
+    cout << "5. Í¼ĞÎÄ£Ê½(ÎŞ·Ö¸ôÏß) - º¬ÌáÊ¾À¸" << endl;
+    cout << "6. Í¼ĞÎÄ£Ê½(ÎŞ·Ö¸ôÏß) - Êó±êÒÆ¶¯" << endl;
+    cout << "7. Í¼ĞÎÄ£Ê½(ÎŞ·Ö¸ôÏß) - ÍêÕûÓÎÏ·" << endl;
+    cout << "8. Í¼ĞÎÄ£Ê½(ÓĞ·Ö¸ôÏß) - ³õÊ¼×´Ì¬" << endl;
+    cout << "9. Í¼ĞÎÄ£Ê½(ÓĞ·Ö¸ôÏß) - º¬ÌáÊ¾À¸" << endl;
+    cout << "10. Í¼ĞÎÄ£Ê½(ÓĞ·Ö¸ôÏß) - Êó±êÒÆ¶¯" << endl;
+    cout << "11. Í¼ĞÎÄ£Ê½(ÓĞ·Ö¸ôÏß) - ÍêÕûÓÎÏ·" << endl;
+    cout << "0. ÍË³ö" << endl;
+    cout << "ÇëÑ¡Ôñ: ";
 
     while (!(cin >> choice) || choice < 0 || choice > 11)
     {
         cin.clear();
         cin.ignore(10000, '\n');
-        cout << "è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°é€‰æ‹©: ";
+        cout << "ÊäÈë´íÎó£¬ÇëÖØĞÂÑ¡Ôñ: ";
     }
 
     return choice;
 }
 
 /***************************************************************************
-  å‡½æ•°åç§°ï¼šget_game_params
-  åŠŸ    èƒ½ï¼šè·å–æ¸¸æˆå‚æ•°
-  è¾“å…¥å‚æ•°ï¼šGameParams& params - æ¸¸æˆå‚æ•°
-  è¿” å› å€¼ï¼šbool - æ˜¯å¦æˆåŠŸè·å–å‚æ•°
-  è¯´    æ˜ï¼šè·å–ç”¨æˆ·è¾“å…¥çš„æ¸¸æˆå‚æ•°
+  º¯ÊıÃû³Æ£ºget_game_params
+  ¹¦    ÄÜ£º»ñÈ¡ÓÎÏ·²ÎÊı
+  ÊäÈë²ÎÊı£ºGameParams& params - ÓÎÏ·²ÎÊı
+  ·µ »Ø Öµ£ºbool - ÊÇ·ñ³É¹¦»ñÈ¡²ÎÊı
+  Ëµ    Ã÷£º»ñÈ¡ÓÃ»§ÊäÈëµÄÓÎÏ·²ÎÊı
 ***************************************************************************/
 bool get_game_params(GameParams &params)
 {
     cct_cls();
 
-    cout << "è¯·è¾“å…¥è¡Œæ•° (5-" << MAX_MATRIX_SIZE << "): ";
+    cout << "ÇëÊäÈëĞĞÊı (5-" << MAX_MATRIX_SIZE << "): ";
     while (!(cin >> params.rows) || params.rows < 5 || params.rows > MAX_MATRIX_SIZE)
     {
         cin.clear();
         cin.ignore(10000, '\n');
-        cout << "è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥è¡Œæ•° (5-" << MAX_MATRIX_SIZE << "): ";
+        cout << "ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈëĞĞÊı (5-" << MAX_MATRIX_SIZE << "): ";
     }
 
-    cout << "è¯·è¾“å…¥åˆ—æ•° (5-" << MAX_MATRIX_SIZE << "): ";
+    cout << "ÇëÊäÈëÁĞÊı (5-" << MAX_MATRIX_SIZE << "): ";
     while (!(cin >> params.cols) || params.cols < 5 || params.cols > MAX_MATRIX_SIZE)
     {
         cin.clear();
         cin.ignore(10000, '\n');
-        cout << "è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥åˆ—æ•° (5-" << MAX_MATRIX_SIZE << "): ";
+        cout << "ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈëÁĞÊı (5-" << MAX_MATRIX_SIZE << "): ";
     }
 
-    // è¯¢é—®ä½œå¼Šæ¨¡å¼ï¼ˆå¦‚æœèœå•é€‰é¡¹æ²¡æœ‰é¢„è®¾ï¼‰
+    // Ñ¯ÎÊ×÷±×Ä£Ê½£¨Èç¹û²Ëµ¥Ñ¡ÏîÃ»ÓĞÔ¤Éè£©
     if (!params.cheat_mode)
     {
         char cheat;
-        cout << "æ˜¯å¦å¯ç”¨ä½œå¼Šæ¨¡å¼(Y/N)? ";
+        cout << "ÊÇ·ñÆôÓÃ×÷±×Ä£Ê½(Y/N)? ";
         cin >> cheat;
         params.cheat_mode = (cheat == 'Y' || cheat == 'y');
     }
@@ -80,12 +80,12 @@ bool get_game_params(GameParams &params)
 }
 
 /***************************************************************************
-  å‡½æ•°åç§°ï¼šplay_game_text_mode
-  åŠŸ    èƒ½ï¼šæ–‡æœ¬æ¨¡å¼ä¸‹çš„æ¸¸æˆä¸»å¾ªç¯
-  è¾“å…¥å‚æ•°ï¼šGameMatrix& matrix - æ¸¸æˆçŸ©é˜µ
-            GameParams& params - æ¸¸æˆå‚æ•°
-  è¿” å› å€¼ï¼šæ— 
-  è¯´    æ˜ï¼šæ–‡æœ¬æ¨¡å¼ä¸‹çš„å®Œæ•´æ¸¸æˆæµç¨‹
+  º¯ÊıÃû³Æ£ºplay_game_text_mode
+  ¹¦    ÄÜ£ºÎÄ±¾Ä£Ê½ÏÂµÄÓÎÏ·Ö÷Ñ­»·
+  ÊäÈë²ÎÊı£ºGameMatrix& matrix - ÓÎÏ·¾ØÕó
+            GameParams& params - ÓÎÏ·²ÎÊı
+  ·µ »Ø Öµ£ºÎŞ
+  Ëµ    Ã÷£ºÎÄ±¾Ä£Ê½ÏÂµÄÍêÕûÓÎÏ·Á÷³Ì
 ***************************************************************************/
 void play_game_text_mode(GameMatrix &matrix, GameParams &params)
 {
@@ -93,11 +93,11 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
 
     while (!game_over)
     {
-        // æ˜¾ç¤ºæ¸¸æˆç•Œé¢
+        // ÏÔÊ¾ÓÎÏ·½çÃæ
         cct_cls();
         display_hints_text(matrix, params);
 
-        // æ˜¾ç¤ºå½“å‰çŠ¶æ€
+        // ÏÔÊ¾µ±Ç°×´Ì¬
         for (int i = 0; i < params.rows; i++)
         {
             cout << (char)('A' + i) << ": ";
@@ -117,7 +117,7 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                 }
                 else if (matrix.cells[i][j] == MARKED_NOT)
                 {
-                    cout << "Â· ";
+                    cout << "¡¤ ";
                 }
 
                 if (params.cheat_mode && matrix.solution[i][j] && matrix.cells[i][j] == EMPTY)
@@ -128,29 +128,29 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
             cout << endl;
         }
 
-        // ç”¨æˆ·è¾“å…¥
-        cout << "\nè¾“å…¥åæ ‡(å¦‚A1)æ ‡è®°çƒçš„ä½ç½®ï¼Œè¾“å…¥Qé€€å‡ºï¼Œè¾“å…¥Cæäº¤: ";
+        // ÓÃ»§ÊäÈë
+        cout << "\nÊäÈë×ø±ê(ÈçA1)±ê¼ÇÇòµÄÎ»ÖÃ£¬ÊäÈëQÍË³ö£¬ÊäÈëCÌá½»: ";
         char input[10];
         cin >> input;
 
-        // æ£€æŸ¥è¾“å…¥
+        // ¼ì²éÊäÈë
         if (input[0] == 'Q' || input[0] == 'q')
         {
             game_over = true;
         }
         else if (input[0] == 'C' || input[0] == 'c')
         {
-            // éªŒè¯è§£ç­”
+            // ÑéÖ¤½â´ğ
             int error_row, error_col;
             if (validate_solution(matrix, params, error_row, error_col))
             {
-                cout << "æ­å–œï¼ä½ çš„è§£ç­”æ­£ç¡®ï¼" << endl;
+                cout << "¹§Ï²£¡ÄãµÄ½â´ğÕıÈ·£¡" << endl;
                 game_over = true;
                 system("pause");
             }
             else
             {
-                cout << "è§£ç­”é”™è¯¯ï¼Œç¬¬ä¸€ä¸ªé”™è¯¯ä½ç½®ï¼š" << (char)('A' + error_row) << (error_col + 1)
+                cout << "½â´ğ´íÎó£¬µÚÒ»¸ö´íÎóÎ»ÖÃ£º" << (char)('A' + error_row) << (error_col + 1)
                      << endl;
                 system("pause");
             }
@@ -158,14 +158,14 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         else if (input[0] >= 'A' && input[0] <= 'A' + params.rows - 1 && input[1] >= '1' &&
                  input[1] <= '9')
         {
-            // è§£æåæ ‡
+            // ½âÎö×ø±ê
             int row = input[0] - 'A';
             int col = atoi(input + 1) - 1;
 
-            // æ£€æŸ¥åæ ‡æœ‰æ•ˆæ€§
+            // ¼ì²é×ø±êÓĞĞ§ĞÔ
             if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)
             {
-                // æ ‡è®°æˆ–å–æ¶ˆæ ‡è®°
+                // ±ê¼Ç»òÈ¡Ïû±ê¼Ç
                 mark_cell(matrix, params, row, col, 1);
             }
         }
@@ -173,27 +173,27 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
 }
 
 /***************************************************************************
-  å‡½æ•°åç§°ï¼šplay_game_graphic_mode
-  åŠŸ    èƒ½ï¼šå›¾å½¢æ¨¡å¼ä¸‹çš„æ¸¸æˆä¸»å¾ªç¯
-  è¾“å…¥å‚æ•°ï¼šGameMatrix& matrix - æ¸¸æˆçŸ©é˜µ
-            GameParams& params - æ¸¸æˆå‚æ•°
-  è¿” å› å€¼ï¼šæ— 
-  è¯´    æ˜ï¼šå›¾å½¢æ¨¡å¼ä¸‹çš„å®Œæ•´æ¸¸æˆæµç¨‹
+  º¯ÊıÃû³Æ£ºplay_game_graphic_mode
+  ¹¦    ÄÜ£ºÍ¼ĞÎÄ£Ê½ÏÂµÄÓÎÏ·Ö÷Ñ­»·
+  ÊäÈë²ÎÊı£ºGameMatrix& matrix - ÓÎÏ·¾ØÕó
+            GameParams& params - ÓÎÏ·²ÎÊı
+  ·µ »Ø Öµ£ºÎŞ
+  Ëµ    Ã÷£ºÍ¼ĞÎÄ£Ê½ÏÂµÄÍêÕûÓÎÏ·Á÷³Ì
 ***************************************************************************/
 void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
 {
     bool game_over = false;
 
-    // å¯ç”¨é¼ æ ‡
+    // ÆôÓÃÊó±ê
     cct_enable_mouse();
 
-    // ç»˜åˆ¶åˆå§‹æ¸¸æˆç•Œé¢
+    // »æÖÆ³õÊ¼ÓÎÏ·½çÃæ
     display_game_graphic(matrix, params);
 
-    // æ˜¾ç¤ºæ“ä½œæç¤º
+    // ÏÔÊ¾²Ù×÷ÌáÊ¾
     cct_setcolor();
     cct_gotoxy(0, 25);
-    cout << "æ“ä½œè¯´æ˜ï¼šå·¦é”®æ ‡è®°çƒå­˜åœ¨ï¼Œå³é”®æ ‡è®°çƒä¸å­˜åœ¨ï¼ŒEnteré”®æäº¤ï¼ŒQé”®é€€å‡º" << endl;
+    cout << "²Ù×÷ËµÃ÷£º×ó¼ü±ê¼ÇÇò´æÔÚ£¬ÓÒ¼ü±ê¼ÇÇò²»´æÔÚ£¬Enter¼üÌá½»£¬Q¼üÍË³ö" << endl;
 
     while (!game_over)
     {
@@ -202,7 +202,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
 
         if (ret == CCT_MOUSE_EVENT)
         {
-            // é¼ æ ‡äº‹ä»¶
+            // Êó±êÊÂ¼ş
             display_mouse_position(mx, my, params);
 
             if (maction == MOUSE_LEFT_BUTTON_CLICK || maction == MOUSE_RIGHT_BUTTON_CLICK)
@@ -214,7 +214,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
 
                 if (is_valid)
                 {
-                    // æ ¹æ®å·¦å³é”®ä¸åŒçš„æ ‡è®°æ–¹å¼
+                    // ¸ù¾İ×óÓÒ¼ü²»Í¬µÄ±ê¼Ç·½Ê½
                     if (maction == MOUSE_LEFT_BUTTON_CLICK)
                     {
                         mark_cell(matrix, params, row, col, 1);
@@ -224,42 +224,42 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                         mark_cell(matrix, params, row, col, 2);
                     }
 
-                    // é‡ç»˜æ¸¸æˆç•Œé¢
+                    // ÖØ»æÓÎÏ·½çÃæ
                     display_game_graphic(matrix, params);
 
-                    // æ˜¾ç¤ºæ“ä½œæç¤º
+                    // ÏÔÊ¾²Ù×÷ÌáÊ¾
                     cct_setcolor();
                     cct_gotoxy(0, 25);
-                    cout << "æ“ä½œè¯´æ˜ï¼šå·¦é”®æ ‡è®°çƒå­˜åœ¨ï¼Œå³é”®æ ‡è®°çƒä¸å­˜åœ¨ï¼ŒEnteré”®æäº¤ï¼ŒQé”®é€€å‡º"
+                    cout << "²Ù×÷ËµÃ÷£º×ó¼ü±ê¼ÇÇò´æÔÚ£¬ÓÒ¼ü±ê¼ÇÇò²»´æÔÚ£¬Enter¼üÌá½»£¬Q¼üÍË³ö"
                          << endl;
                 }
             }
         }
         else if (ret == CCT_KEYBOARD_EVENT)
         {
-            // é”®ç›˜äº‹ä»¶
+            // ¼üÅÌÊÂ¼ş
             if (keycode1 == 'q' || keycode1 == 'Q')
             {
                 game_over = true;
             }
             else if (keycode1 == '\r')
             {
-                // éªŒè¯è§£ç­”
+                // ÑéÖ¤½â´ğ
                 int error_row, error_col;
                 if (validate_solution(matrix, params, error_row, error_col))
                 {
                     cct_gotoxy(0, 28);
-                    cout << "æ­å–œï¼ä½ çš„è§£ç­”æ­£ç¡®ï¼" << endl;
+                    cout << "¹§Ï²£¡ÄãµÄ½â´ğÕıÈ·£¡" << endl;
                     game_over = true;
                     system("pause");
                 }
                 else
                 {
                     cct_gotoxy(0, 28);
-                    cout << "è§£ç­”é”™è¯¯ï¼Œç¬¬ä¸€ä¸ªé”™è¯¯ä½ç½®ï¼š" << (char)('A' + error_row)
+                    cout << "½â´ğ´íÎó£¬µÚÒ»¸ö´íÎóÎ»ÖÃ£º" << (char)('A' + error_row)
                          << (error_col + 1) << "      " << endl;
 
-                    // æ ‡è®°é”™è¯¯ä½ç½®
+                    // ±ê¼Ç´íÎóÎ»ÖÃ
                     int cell_width = params.has_separators ? 3 : 2;
                     int cell_height = params.has_separators ? 2 : 1;
                     int hint_width = matrix.hint_width * 3;
@@ -267,7 +267,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     int matrix_x = 5 + hint_width;
                     int matrix_y = 3 + hint_height;
 
-                    // é—ªçƒæç¤ºé”™è¯¯ä½ç½®
+                    // ÉÁË¸ÌáÊ¾´íÎóÎ»ÖÃ
                     for (int i = 0; i < 3; i++)
                     {
                         cct_gotoxy(matrix_x + error_col * cell_width + 1,
@@ -283,19 +283,19 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                         Sleep(300);
                     }
 
-                    // æ¢å¤æ˜¾ç¤º
+                    // »Ö¸´ÏÔÊ¾
                     display_game_graphic(matrix, params);
 
-                    // æ˜¾ç¤ºæ“ä½œæç¤º
+                    // ÏÔÊ¾²Ù×÷ÌáÊ¾
                     cct_setcolor();
                     cct_gotoxy(0, 25);
-                    cout << "æ“ä½œè¯´æ˜ï¼šå·¦é”®æ ‡è®°çƒå­˜åœ¨ï¼Œå³é”®æ ‡è®°çƒä¸å­˜åœ¨ï¼ŒEnteré”®æäº¤ï¼ŒQé”®é€€å‡º"
+                    cout << "²Ù×÷ËµÃ÷£º×ó¼ü±ê¼ÇÇò´æÔÚ£¬ÓÒ¼ü±ê¼ÇÇò²»´æÔÚ£¬Enter¼üÌá½»£¬Q¼üÍË³ö"
                          << endl;
                 }
             }
         }
     }
 
-    // ç¦ç”¨é¼ æ ‡
+    // ½ûÓÃÊó±ê
     cct_disable_mouse();
 }

@@ -1,7 +1,6 @@
 @echo off
-chcp 936 > nul
 echo 正在编译...
-g++ -o number-game.exe puzzle_main.cpp puzzle_base.cpp puzzle_console.cpp puzzle_tools.cpp cmd_console_tools.cpp -fexec-charset=GBK -finput-charset=GBK -lwinmm
+g++ -o number-game.exe pullze_main.cpp pullze_base.cpp pullze_console.cpp pullze_tools.cpp cmd_console_tools.cpp 
 if %ERRORLEVEL% EQU 0 (
     echo 编译成功！
     echo 正在运行程序...

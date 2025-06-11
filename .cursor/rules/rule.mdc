@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+cmd_console_tools.cpp和cmd_console_tools.h不准改动
+
+

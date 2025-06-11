@@ -6,45 +6,44 @@
 #include <iomanip>
 #include <iostream>
 
-
 using namespace std;
 
-/* å¸¸é‡å®šä¹‰ */
-#define MAX_MATRIX_SIZE 25 // æœ€å¤§çŸ©é˜µå°ºå¯¸
+/* ³£Á¿¶¨Òå */
+#define MAX_MATRIX_SIZE 25 // ×î´ó¾ØÕó³ß´ç
 
-/* çŸ©é˜µä¸­çš„å…ƒç´ çŠ¶æ€ */
+/* ¾ØÕóÖĞµÄÔªËØ×´Ì¬ */
 enum CellStatus
 {
-    EMPTY = 0,        // ç©º
-    FILLED = 1,       // æœ‰çƒ
-    MARKED = 2,       // æ ‡è®°ä¸ºæœ‰çƒ
-    MARKED_WRONG = 3, // æ ‡è®°é”™è¯¯
-    MARKED_NOT = 4    // æ ‡è®°ä¸ºæ²¡æœ‰çƒ
+    EMPTY = 0,        // ¿Õ
+    FILLED = 1,       // ÓĞÇò
+    MARKED = 2,       // ±ê¼ÇÎªÓĞÇò
+    MARKED_WRONG = 3, // ±ê¼Ç´íÎó
+    MARKED_NOT = 4    // ±ê¼ÇÎªÃ»ÓĞÇò
 };
 
-/* æ¸¸æˆå‚æ•°ç»“æ„ä½“ */
+/* ÓÎÏ·²ÎÊı½á¹¹Ìå */
 struct GameParams
 {
-    int rows;            // è¡Œæ•°
-    int cols;            // åˆ—æ•°
-    bool cheat_mode;     // ä½œå¼Šæ¨¡å¼
-    bool has_separators; // æ˜¯å¦æœ‰åˆ†éš”çº¿
+    int rows;            // ĞĞÊı
+    int cols;            // ÁĞÊı
+    bool cheat_mode;     // ×÷±×Ä£Ê½
+    bool has_separators; // ÊÇ·ñÓĞ·Ö¸ôÏß
 };
 
-/* æ¸¸æˆçŸ©é˜µç»“æ„ä½“ */
+/* ÓÎÏ·¾ØÕó½á¹¹Ìå */
 struct GameMatrix
 {
-    CellStatus cells[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE];  // çŸ©é˜µçŠ¶æ€
-    bool solution[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE];     // è§£å†³æ–¹æ¡ˆ
-    int row_hints[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE / 2]; // è¡Œæç¤º
-    int row_hint_count[MAX_MATRIX_SIZE];                 // è¡Œæç¤ºè®¡æ•°
-    int col_hints[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE / 2]; // åˆ—æç¤º
-    int col_hint_count[MAX_MATRIX_SIZE];                 // åˆ—æç¤ºè®¡æ•°
-    int hint_width;                                      // æç¤ºåŒºå®½åº¦
-    int hint_height;                                     // æç¤ºåŒºé«˜åº¦
+    CellStatus cells[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE];  // ¾ØÕó×´Ì¬
+    bool solution[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE];     // ½â¾ö·½°¸
+    int row_hints[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE / 2]; // ĞĞÌáÊ¾
+    int row_hint_count[MAX_MATRIX_SIZE];                 // ĞĞÌáÊ¾¼ÆÊı
+    int col_hints[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE / 2]; // ÁĞÌáÊ¾
+    int col_hint_count[MAX_MATRIX_SIZE];                 // ÁĞÌáÊ¾¼ÆÊı
+    int hint_width;                                      // ÌáÊ¾Çø¿í¶È
+    int hint_height;                                     // ÌáÊ¾Çø¸ß¶È
 };
 
-/* åŸºæœ¬å‡½æ•° - puzzle_base.cpp */
+/* »ù±¾º¯Êı - puzzle_base.cpp */
 void init_game(GameMatrix &matrix, const GameParams &params);
 void generate_matrix(GameMatrix &matrix, const GameParams &params);
 void calculate_hints(GameMatrix &matrix, const GameParams &params);
@@ -52,7 +51,7 @@ bool validate_solution(const GameMatrix &matrix, const GameParams &params, int &
                        int &error_col);
 void mark_cell(GameMatrix &matrix, const GameParams &params, int row, int col, int mark_type);
 
-/* æ§åˆ¶å°æ˜¾ç¤ºå‡½æ•° - puzzle_console.cpp */
+/* ¿ØÖÆÌ¨ÏÔÊ¾º¯Êı - puzzle_console.cpp */
 void display_matrix_text(const GameMatrix &matrix, const GameParams &params);
 void display_hints_text(const GameMatrix &matrix, const GameParams &params);
 void display_matrix_graphic(const GameMatrix &matrix, const GameParams &params);
@@ -62,7 +61,7 @@ void display_mouse_position(int mx, int my, const GameParams &params);
 void convert_mouse_to_cell(int mx, int my, int &row, int &col, const GameParams &params,
                            bool &is_valid);
 
-/* å·¥å…·å‡½æ•° - puzzle_tools.cpp */
+/* ¹¤¾ßº¯Êı - puzzle_tools.cpp */
 int show_menu();
 bool get_game_params(GameParams &params);
 void play_game_text_mode(GameMatrix &matrix, GameParams &params);

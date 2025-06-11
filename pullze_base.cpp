@@ -1,16 +1,16 @@
 #include "pullze.h"
 
 /***************************************************************************
-  å‡½æ•°åç§°ï¼šinit_game
-  åŠŸ    èƒ½ï¼šåˆå§‹åŒ–æ¸¸æˆçŸ©é˜µ
-  è¾“å…¥å‚æ•°ï¼šGameMatrix& matrix - æ¸¸æˆçŸ©é˜µ
-            const GameParams& params - æ¸¸æˆå‚æ•°
-  è¿” å› å€¼ï¼šæ— 
-  è¯´    æ˜ï¼šæ¸…ç©ºçŸ©é˜µï¼Œå‡†å¤‡æ–°æ¸¸æˆ
+  º¯ÊıÃû³Æ£ºinit_game
+  ¹¦    ÄÜ£º³õÊ¼»¯ÓÎÏ·¾ØÕó
+  ÊäÈë²ÎÊı£ºGameMatrix& matrix - ÓÎÏ·¾ØÕó
+            const GameParams& params - ÓÎÏ·²ÎÊı
+  ·µ »Ø Öµ£ºÎŞ
+  Ëµ    Ã÷£ºÇå¿Õ¾ØÕó£¬×¼±¸ĞÂÓÎÏ·
 ***************************************************************************/
 void init_game(GameMatrix &matrix, const GameParams &params)
 {
-    // åˆå§‹åŒ–cellsæ•°ç»„ä¸ºç©º
+    // ³õÊ¼»¯cellsÊı×éÎª¿Õ
     for (int i = 0; i < params.rows; i++)
     {
         for (int j = 0; j < params.cols; j++)
@@ -20,7 +20,7 @@ void init_game(GameMatrix &matrix, const GameParams &params)
         }
     }
 
-    // åˆå§‹åŒ–æç¤ºæ•°ç»„
+    // ³õÊ¼»¯ÌáÊ¾Êı×é
     for (int i = 0; i < params.rows; i++)
     {
         matrix.row_hint_count[i] = 0;
@@ -39,25 +39,25 @@ void init_game(GameMatrix &matrix, const GameParams &params)
         }
     }
 
-    // æç¤ºåŒºå®½åº¦å’Œé«˜åº¦åˆå§‹åŒ–ä¸º0
+    // ÌáÊ¾Çø¿í¶ÈºÍ¸ß¶È³õÊ¼»¯Îª0
     matrix.hint_width = 0;
     matrix.hint_height = 0;
 }
 
 /***************************************************************************
-  å‡½æ•°åç§°ï¼šgenerate_matrix
-  åŠŸ    èƒ½ï¼šç”Ÿæˆæ¸¸æˆçŸ©é˜µ(éšæœºç”Ÿæˆä¸€åŠçš„çƒ)
-  è¾“å…¥å‚æ•°ï¼šGameMatrix& matrix - æ¸¸æˆçŸ©é˜µ
-            const GameParams& params - æ¸¸æˆå‚æ•°
-  è¿” å› å€¼ï¼šæ— 
-  è¯´    æ˜ï¼šéšæœºç”ŸæˆçŸ©é˜µä¸­ä¸€åŠçš„çƒ
+  º¯ÊıÃû³Æ£ºgenerate_matrix
+  ¹¦    ÄÜ£ºÉú³ÉÓÎÏ·¾ØÕó(Ëæ»úÉú³ÉÒ»°ëµÄÇò)
+  ÊäÈë²ÎÊı£ºGameMatrix& matrix - ÓÎÏ·¾ØÕó
+            const GameParams& params - ÓÎÏ·²ÎÊı
+  ·µ »Ø Öµ£ºÎŞ
+  Ëµ    Ã÷£ºËæ»úÉú³É¾ØÕóÖĞÒ»°ëµÄÇò
 ***************************************************************************/
 void generate_matrix(GameMatrix &matrix, const GameParams &params)
 {
     int total_cells = params.rows * params.cols;
-    int balls_count = (total_cells + 1) / 2; // å‘ä¸Šå–æ•´
+    int balls_count = (total_cells + 1) / 2; // ÏòÉÏÈ¡Õû
 
-    // åˆå§‹æ—¶æ‰€æœ‰ä½ç½®éƒ½æ²¡æœ‰çƒ
+    // ³õÊ¼Ê±ËùÓĞÎ»ÖÃ¶¼Ã»ÓĞÇò
     for (int i = 0; i < params.rows; i++)
     {
         for (int j = 0; j < params.cols; j++)
@@ -66,7 +66,7 @@ void generate_matrix(GameMatrix &matrix, const GameParams &params)
         }
     }
 
-    // éšæœºæ”¾ç½®çƒ
+    // Ëæ»ú·ÅÖÃÇò
     while (balls_count > 0)
     {
         int row = rand() % params.rows;
@@ -81,16 +81,16 @@ void generate_matrix(GameMatrix &matrix, const GameParams &params)
 }
 
 /***************************************************************************
-  å‡½æ•°åç§°ï¼šcalculate_hints
-  åŠŸ    èƒ½ï¼šè®¡ç®—è¡Œå’Œåˆ—çš„æç¤ºæ•°å­—
-  è¾“å…¥å‚æ•°ï¼šGameMatrix& matrix - æ¸¸æˆçŸ©é˜µ
-            const GameParams& params - æ¸¸æˆå‚æ•°
-  è¿” å› å€¼ï¼šæ— 
-  è¯´    æ˜ï¼šè®¡ç®—æ¯è¡Œæ¯åˆ—çš„è¿ç»­çƒæ•°æç¤º
+  º¯ÊıÃû³Æ£ºcalculate_hints
+  ¹¦    ÄÜ£º¼ÆËãĞĞºÍÁĞµÄÌáÊ¾Êı×Ö
+  ÊäÈë²ÎÊı£ºGameMatrix& matrix - ÓÎÏ·¾ØÕó
+            const GameParams& params - ÓÎÏ·²ÎÊı
+  ·µ »Ø Öµ£ºÎŞ
+  Ëµ    Ã÷£º¼ÆËãÃ¿ĞĞÃ¿ÁĞµÄÁ¬ĞøÇòÊıÌáÊ¾
 ***************************************************************************/
 void calculate_hints(GameMatrix &matrix, const GameParams &params)
 {
-    // è®¡ç®—è¡Œæç¤º
+    // ¼ÆËãĞĞÌáÊ¾
     for (int i = 0; i < params.rows; i++)
     {
         int count = 0;
@@ -103,10 +103,10 @@ void calculate_hints(GameMatrix &matrix, const GameParams &params)
                 count++;
             }
 
-            // å¦‚æœé‡åˆ°ç©ºä½æˆ–è€…åˆ°è¾¾è¡Œå°¾ï¼Œè€Œä¸”ä¹‹å‰æœ‰è¿ç»­çš„çƒ
+            // Èç¹ûÓöµ½¿ÕÎ»»òÕßµ½´ïĞĞÎ²£¬¶øÇÒÖ®Ç°ÓĞÁ¬ĞøµÄÇò
             if ((!matrix.solution[i][j] || j == params.cols - 1) && count > 0)
             {
-                // å¦‚æœæ˜¯è¡Œå°¾è€Œä¸”æœ€åä¸€ä¸ªä½ç½®æœ‰çƒï¼Œéœ€è¦ç‰¹æ®Šå¤„ç†
+                // Èç¹ûÊÇĞĞÎ²¶øÇÒ×îºóÒ»¸öÎ»ÖÃÓĞÇò£¬ĞèÒªÌØÊâ´¦Àí
                 if (j == params.cols - 1 && matrix.solution[i][j])
                 {
                     matrix.row_hints[i][hint_idx++] = count;
@@ -119,7 +119,7 @@ void calculate_hints(GameMatrix &matrix, const GameParams &params)
             }
         }
 
-        // å¦‚æœè¿™ä¸€è¡Œæ²¡æœ‰ä»»ä½•çƒï¼Œæ”¾ä¸€ä¸ª0
+        // Èç¹ûÕâÒ»ĞĞÃ»ÓĞÈÎºÎÇò£¬·ÅÒ»¸ö0
         if (hint_idx == 0)
         {
             matrix.row_hints[i][hint_idx++] = 0;
@@ -128,7 +128,7 @@ void calculate_hints(GameMatrix &matrix, const GameParams &params)
         matrix.row_hint_count[i] = hint_idx;
     }
 
-    // è®¡ç®—åˆ—æç¤º
+    // ¼ÆËãÁĞÌáÊ¾
     for (int j = 0; j < params.cols; j++)
     {
         int count = 0;
@@ -141,10 +141,10 @@ void calculate_hints(GameMatrix &matrix, const GameParams &params)
                 count++;
             }
 
-            // å¦‚æœé‡åˆ°ç©ºä½æˆ–è€…åˆ°è¾¾åˆ—å°¾ï¼Œè€Œä¸”ä¹‹å‰æœ‰è¿ç»­çš„çƒ
+            // Èç¹ûÓöµ½¿ÕÎ»»òÕßµ½´ïÁĞÎ²£¬¶øÇÒÖ®Ç°ÓĞÁ¬ĞøµÄÇò
             if ((!matrix.solution[i][j] || i == params.rows - 1) && count > 0)
             {
-                // å¦‚æœæ˜¯åˆ—å°¾è€Œä¸”æœ€åä¸€ä¸ªä½ç½®æœ‰çƒï¼Œéœ€è¦ç‰¹æ®Šå¤„ç†
+                // Èç¹ûÊÇÁĞÎ²¶øÇÒ×îºóÒ»¸öÎ»ÖÃÓĞÇò£¬ĞèÒªÌØÊâ´¦Àí
                 if (i == params.rows - 1 && matrix.solution[i][j])
                 {
                     matrix.col_hints[j][hint_idx++] = count;
@@ -157,7 +157,7 @@ void calculate_hints(GameMatrix &matrix, const GameParams &params)
             }
         }
 
-        // å¦‚æœè¿™ä¸€åˆ—æ²¡æœ‰ä»»ä½•çƒï¼Œæ”¾ä¸€ä¸ª0
+        // Èç¹ûÕâÒ»ÁĞÃ»ÓĞÈÎºÎÇò£¬·ÅÒ»¸ö0
         if (hint_idx == 0)
         {
             matrix.col_hints[j][hint_idx++] = 0;
@@ -166,7 +166,7 @@ void calculate_hints(GameMatrix &matrix, const GameParams &params)
         matrix.col_hint_count[j] = hint_idx;
     }
 
-    // è®¡ç®—æç¤ºåŒºåŸŸçš„å®½åº¦å’Œé«˜åº¦
+    // ¼ÆËãÌáÊ¾ÇøÓòµÄ¿í¶ÈºÍ¸ß¶È
     int max_row_hints = 0;
     for (int i = 0; i < params.rows; i++)
     {
@@ -189,14 +189,14 @@ void calculate_hints(GameMatrix &matrix, const GameParams &params)
 }
 
 /***************************************************************************
-  å‡½æ•°åç§°ï¼švalidate_solution
-  åŠŸ    èƒ½ï¼šéªŒè¯ç©å®¶çš„è§£ç­”æ˜¯å¦æ­£ç¡®
-  è¾“å…¥å‚æ•°ï¼šconst GameMatrix& matrix - æ¸¸æˆçŸ©é˜µ
-            const GameParams& params - æ¸¸æˆå‚æ•°
-            int& error_row - é”™è¯¯çš„è¡Œ (å¦‚æœæœ‰)
-            int& error_col - é”™è¯¯çš„åˆ— (å¦‚æœæœ‰)
-  è¿” å› å€¼ï¼šbool - æ˜¯å¦æ­£ç¡®
-  è¯´    æ˜ï¼šéªŒè¯ç©å®¶çš„è§£ç­”ï¼Œå¹¶è¿”å›ç¬¬ä¸€ä¸ªé”™è¯¯çš„ä½ç½®
+  º¯ÊıÃû³Æ£ºvalidate_solution
+  ¹¦    ÄÜ£ºÑéÖ¤Íæ¼ÒµÄ½â´ğÊÇ·ñÕıÈ·
+  ÊäÈë²ÎÊı£ºconst GameMatrix& matrix - ÓÎÏ·¾ØÕó
+            const GameParams& params - ÓÎÏ·²ÎÊı
+            int& error_row - ´íÎóµÄĞĞ (Èç¹ûÓĞ)
+            int& error_col - ´íÎóµÄÁĞ (Èç¹ûÓĞ)
+  ·µ »Ø Öµ£ºbool - ÊÇ·ñÕıÈ·
+  Ëµ    Ã÷£ºÑéÖ¤Íæ¼ÒµÄ½â´ğ£¬²¢·µ»ØµÚÒ»¸ö´íÎóµÄÎ»ÖÃ
 ***************************************************************************/
 bool validate_solution(const GameMatrix &matrix, const GameParams &params, int &error_row,
                        int &error_col)
@@ -205,7 +205,7 @@ bool validate_solution(const GameMatrix &matrix, const GameParams &params, int &
     {
         for (int j = 0; j < params.cols; j++)
         {
-            // æ£€æŸ¥æ¯ä¸ªä½ç½®
+            // ¼ì²éÃ¿¸öÎ»ÖÃ
             if ((matrix.cells[i][j] == MARKED && !matrix.solution[i][j]) ||
                 (matrix.cells[i][j] != MARKED && matrix.solution[i][j]))
             {
@@ -219,30 +219,30 @@ bool validate_solution(const GameMatrix &matrix, const GameParams &params, int &
 }
 
 /***************************************************************************
-  å‡½æ•°åç§°ï¼šmark_cell
-  åŠŸ    èƒ½ï¼šæ ‡è®°æˆ–å–æ¶ˆæ ‡è®°ä¸€ä¸ªå•å…ƒæ ¼
-  è¾“å…¥å‚æ•°ï¼šGameMatrix& matrix - æ¸¸æˆçŸ©é˜µ
-            const GameParams& params - æ¸¸æˆå‚æ•°
-            int row - è¡Œç´¢å¼•
-            int col - åˆ—ç´¢å¼•
-            int mark_type - æ ‡è®°ç±»å‹ (1: å·¦é”® - æœ‰çƒ, 2: å³é”® - æ— çƒ)
-  è¿” å› å€¼ï¼šæ— 
-  è¯´    æ˜ï¼šæ”¹å˜å•å…ƒæ ¼çš„çŠ¶æ€
+  º¯ÊıÃû³Æ£ºmark_cell
+  ¹¦    ÄÜ£º±ê¼Ç»òÈ¡Ïû±ê¼ÇÒ»¸öµ¥Ôª¸ñ
+  ÊäÈë²ÎÊı£ºGameMatrix& matrix - ÓÎÏ·¾ØÕó
+            const GameParams& params - ÓÎÏ·²ÎÊı
+            int row - ĞĞË÷Òı
+            int col - ÁĞË÷Òı
+            int mark_type - ±ê¼ÇÀàĞÍ (1: ×ó¼ü - ÓĞÇò, 2: ÓÒ¼ü - ÎŞÇò)
+  ·µ »Ø Öµ£ºÎŞ
+  Ëµ    Ã÷£º¸Ä±äµ¥Ôª¸ñµÄ×´Ì¬
 ***************************************************************************/
 void mark_cell(GameMatrix &matrix, const GameParams &params, int row, int col, int mark_type)
 {
-    // æ£€æŸ¥è¡Œåˆ—åæ ‡çš„æœ‰æ•ˆæ€§
+    // ¼ì²éĞĞÁĞ×ø±êµÄÓĞĞ§ĞÔ
     if (row < 0 || row >= params.rows || col < 0 || col >= params.cols)
     {
         return;
     }
 
-    // æ ¹æ®æ ‡è®°ç±»å‹å’Œå½“å‰çŠ¶æ€è¿›è¡Œæ›´æ–°
+    // ¸ù¾İ±ê¼ÇÀàĞÍºÍµ±Ç°×´Ì¬½øĞĞ¸üĞÂ
     if (mark_type == 1)
-    { // å·¦é”® - æ ‡è®°ä¸ºæœ‰çƒ
+    { // ×ó¼ü - ±ê¼ÇÎªÓĞÇò
         if (matrix.cells[row][col] == EMPTY || matrix.cells[row][col] == MARKED_NOT)
         {
-            // å¦‚æœæ˜¯ä½œå¼Šæ¨¡å¼ï¼Œæ£€æŸ¥æ˜¯å¦æ­£ç¡®
+            // Èç¹ûÊÇ×÷±×Ä£Ê½£¬¼ì²éÊÇ·ñÕıÈ·
             if (params.cheat_mode)
             {
                 if (matrix.solution[row][col])
@@ -261,12 +261,12 @@ void mark_cell(GameMatrix &matrix, const GameParams &params, int row, int col, i
         }
         else if (matrix.cells[row][col] == MARKED || matrix.cells[row][col] == MARKED_WRONG)
         {
-            // å–æ¶ˆæ ‡è®°
+            // È¡Ïû±ê¼Ç
             matrix.cells[row][col] = EMPTY;
         }
     }
     else if (mark_type == 2)
-    { // å³é”® - æ ‡è®°ä¸ºæ— çƒ
+    { // ÓÒ¼ü - ±ê¼ÇÎªÎŞÇò
         if (matrix.cells[row][col] == EMPTY || matrix.cells[row][col] == MARKED ||
             matrix.cells[row][col] == MARKED_WRONG)
         {
@@ -274,7 +274,7 @@ void mark_cell(GameMatrix &matrix, const GameParams &params, int row, int col, i
         }
         else if (matrix.cells[row][col] == MARKED_NOT)
         {
-            // å–æ¶ˆæ ‡è®°
+            // È¡Ïû±ê¼Ç
             matrix.cells[row][col] = EMPTY;
         }
     }

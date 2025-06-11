@@ -23,16 +23,16 @@ set(EXECUTABLE_NAME "90-b2")
 
 # 添加源文件
 set(SOURCES
-    puzzle_main.cpp
-    puzzle_base.cpp
-    puzzle_console.cpp
-    puzzle_tools.cpp
+    pullze_main.cpp
+    pullze_base.cpp
+    pullze_console.cpp
+    pullze_tools.cpp
     cmd_console_tools.cpp
 )
 
 # 添加头文件
 set(HEADERS
-    puzzle.h
+    pullze.h
     cmd_console_tools.h
 )
 

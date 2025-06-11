@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 cmd_console_tools.cpp和cmd_console_tools.h不准改动
 

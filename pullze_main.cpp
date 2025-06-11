@@ -50,7 +50,6 @@ int main()
                 init_game(matrix, params);
                 generate_matrix(matrix, params);
                 calculate_hints(matrix, params);
-                display_matrix_text(matrix, params);
                 display_hints_text(matrix, params);
                 system("pause");
             }

@@ -148,10 +148,11 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
     {
         // 显示游戏界面
         cct_cls();
-        display_hints_text(matrix, params);
 
-        // 显示顶部边框和列标题
-        cout << "+-+";
+        cout << "初始数组：" << endl;
+
+        // 显示列提示
+        cout << "-------+";
         for (int j = 0; j < params.cols; j++)
         {
             cout << "-";
@@ -162,7 +163,54 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         }
         cout << "-----------+" << endl;
 
-        cout << "| |";
+        cout << "       |";
+        for (int j = 0; j < params.cols; j++)
+        {
+            if (matrix.col_hint_count[j] > 0)
+            {
+                cout << " " << matrix.col_hints[j][0];
+            }
+            else
+            {
+                cout << "  ";
+            }
+            if ((j + 1) % 5 == 0 && j < params.cols - 1)
+            {
+                cout << " |";
+            }
+        }
+        cout << " |" << endl;
+
+        cout << "       |";
+        for (int j = 0; j < params.cols; j++)
+        {
+            if (matrix.col_hint_count[j] > 1)
+            {
+                cout << " " << matrix.col_hints[j][1];
+            }
+            else
+            {
+                cout << "  ";
+            }
+            if ((j + 1) % 5 == 0 && j < params.cols - 1)
+            {
+                cout << " |";
+            }
+        }
+        cout << " |" << endl;
+
+        cout << "-------+";
+        for (int j = 0; j < params.cols; j++)
+        {
+            cout << "-";
+            if ((j + 1) % 5 == 0 && j < params.cols - 1)
+            {
+                cout << "-";
+            }
+        }
+        cout << "-----------+" << endl;
+
+        cout << "       |";
         for (int j = 0; j < params.cols; j++)
         {
             cout << " " << (char)('a' + j);
@@ -173,7 +221,7 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         }
         cout << " |" << endl;
 
-        cout << "+-+";
+        cout << "-----+-+";
         for (int j = 0; j < params.cols; j++)
         {
             cout << "-";
@@ -184,11 +232,30 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         }
         cout << "-----------+" << endl;
 
-        // 显示矩阵内容
+        // 显示矩阵内容和行提示
         for (int i = 0; i < params.rows; i++)
         {
+            // 显示行提示
+            if (matrix.row_hint_count[i] == 1)
+            {
+                cout << "   " << matrix.row_hints[i][0] << " |";
+            }
+            else if (matrix.row_hint_count[i] == 2)
+            {
+                cout << " " << matrix.row_hints[i][0] << " " << matrix.row_hints[i][1] << " |";
+            }
+            else if (matrix.row_hint_count[i] == 3)
+            {
+                cout << matrix.row_hints[i][0] << " " << matrix.row_hints[i][1] << " "
+                     << matrix.row_hints[i][2] << " |";
+            }
+            else
+            {
+                cout << "     |";
+            }
+
             // 显示行标题（A,B,C,...）
-            cout << "|" << (char)('A' + i) << "|";
+            cout << (char)('A' + i) << "|";
 
             for (int j = 0; j < params.cols; j++)
             {
@@ -223,7 +290,7 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
             // 每5行添加一个分隔线
             if ((i + 1) % 5 == 0 && i < params.rows - 1)
             {
-                cout << "+-+";
+                cout << "-----+-+";
                 for (int j = 0; j < params.cols; j++)
                 {
                     cout << "-";
@@ -237,7 +304,7 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         }
 
         // 显示底部边框
-        cout << "+-+";
+        cout << "-----+-+";
         for (int j = 0; j < params.cols; j++)
         {
             cout << "-";

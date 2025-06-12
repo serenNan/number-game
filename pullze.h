@@ -67,4 +67,5 @@ int show_menu();
 bool get_game_params(GameParams &params);
 void play_game_text_mode(GameMatrix &matrix, GameParams &params);
 void play_game_graphic_mode(GameMatrix &matrix, GameParams &params);
+void show_mouse_position_mode(GameMatrix &matrix, GameParams &params);
 void draw_frame(int x, int y, int width, int height, bool has_separators);

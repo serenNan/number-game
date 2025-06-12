@@ -464,18 +464,26 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
             // 鼠标事件
             display_mouse_position(mx, my, params);
 
+            // 处理鼠标坐标显示（包括移动事件）
+            int row, col;
+            bool is_valid;
+            convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+
+            if (is_valid)
+            {
+                // 显示当前单元格坐标
+                cct_gotoxy(0, 27);
+                cout << "当前单元格: " << (char)('A' + row) << (col + 1) << "                ";
+            }
+            else
+            {
+                // 清除单元格坐标显示
+                cct_gotoxy(0, 27);
+                cout << "                                  ";
+            }
+
             if (maction == MOUSE_LEFT_BUTTON_CLICK || maction == MOUSE_RIGHT_BUTTON_CLICK)
             {
-                int row, col;
-                bool is_valid;
-
-                // 计算提示区域大小
-                int hint_width = matrix.hint_width * 2;
-                int hint_height = matrix.hint_height;
-
-                // 更新鼠标坐标转换函数
-                convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
-
                 if (is_valid)
                 {
                     // 根据左右键不同的标记方式
@@ -582,6 +590,74 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式"
                          << endl;
                 }
+            }
+        }
+    }
+
+    // 禁用鼠标
+    cct_disable_mouse();
+}
+
+/***************************************************************************
+  函数名称：show_mouse_position_mode
+  功    能：图形模式下只显示鼠标位置
+  输入参数：GameMatrix& matrix - 游戏矩阵
+            GameParams& params - 游戏参数
+  返 回 值：无
+  说    明：F选项专用，只显示鼠标位置，不进行游戏
+***************************************************************************/
+void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
+{
+    bool quit = false;
+
+    // 默认开启作弊模式以显示解答
+    params.cheat_mode = true;
+
+    // 启用鼠标
+    cct_enable_mouse();
+
+    // 绘制初始游戏界面
+    display_game_graphic(matrix, params);
+
+    // 显示操作提示
+    cct_setcolor();
+    cct_gotoxy(0, 25);
+    cout << "操作说明：移动鼠标显示坐标，Q键退出" << endl;
+
+    while (!quit)
+    {
+        int mx, my, maction, keycode1, keycode2;
+        int ret = cct_read_keyboard_and_mouse(mx, my, maction, keycode1, keycode2);
+
+        if (ret == CCT_MOUSE_EVENT)
+        {
+            // 鼠标事件
+            display_mouse_position(mx, my, params);
+
+            // 处理鼠标坐标显示（包括移动事件）
+            int row, col;
+            bool is_valid;
+            convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+
+            if (is_valid)
+            {
+                // 显示当前单元格坐标
+                cct_gotoxy(0, 27);
+                cout << "当前单元格: " << (char)('A' + row) << (col + 1) << "                ";
+            }
+            else
+            {
+                // 清除单元格坐标显示
+                cct_gotoxy(0, 27);
+                cout << "                                  ";
+            }
+        }
+        else if (ret == CCT_KEYBOARD_EVENT)
+        {
+            // 键盘事件
+            if (keycode1 == 'q' || keycode1 == 'Q')
+            {
+                quit = true;
             }
         }
     }

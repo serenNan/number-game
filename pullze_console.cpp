@@ -583,7 +583,7 @@ void display_mouse_position(int mx, int my, const GameParams &params)
 {
     cct_setcolor();
     cct_gotoxy(0, 30);
-    cout << "鼠标位置: " << mx << "," << my << "                ";
+    cout << "鼠标坐标: X=" << setw(3) << mx << ", Y=" << setw(3) << my << "        ";
 }
 
 /***************************************************************************

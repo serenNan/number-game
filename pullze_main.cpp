@@ -105,7 +105,7 @@ int main()
                 init_game(matrix, params);
                 generate_matrix(matrix, params);
                 calculate_hints(matrix, params);
-                play_game_graphic_mode(matrix, params);
+                show_mouse_position_mode(matrix, params);
             }
             break;
 
@@ -154,7 +154,7 @@ int main()
                 init_game(matrix, params);
                 generate_matrix(matrix, params);
                 calculate_hints(matrix, params);
-                play_game_graphic_mode(matrix, params);
+                show_mouse_position_mode(matrix, params);
             }
             break;
 

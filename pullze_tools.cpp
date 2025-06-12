@@ -120,15 +120,6 @@ bool get_game_params(GameParams &params)
         break;
     }
 
-    // 询问作弊模式（如果菜单选项没有预设）
-    if (!params.cheat_mode)
-    {
-        char cheat;
-        cout << "是否启用作弊模式(Y/N)? ";
-        cin >> cheat;
-        params.cheat_mode = (cheat == 'Y' || cheat == 'y');
-    }
-
     return true;
 }
 
@@ -143,6 +134,9 @@ bool get_game_params(GameParams &params)
 void play_game_text_mode(GameMatrix &matrix, GameParams &params)
 {
     bool game_over = false;
+
+    // 默认关闭作弊模式
+    params.cheat_mode = false;
 
     while (!game_over)
     {
@@ -356,17 +350,25 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         }
         cout << "---+-+-----------+-----------+" << endl;
 
+        // 显示当前作弊模式状态
+        cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
+
         // 用户输入
-        cout << "\n输入坐标(如Aa)标记球的位置，输入Q退出，输入C提交: ";
+        cout << "\n命令形式：Aa=等价于图形游戏中鼠标左键选择Aa位(区分大小写)" << endl;
+        cout << "         不需要支持图形界面的右键打叉，再次输入Aa相当于清除" << endl;
+        cout << "         X/x=退出(新行仅有X/x，不分大小写)" << endl;
+        cout << "         Y/y=提交(新行仅有Y/y，不分大小写)" << endl;
+        cout << "         Z/z=作弊(新行仅有Z/z，不分大小写)" << endl;
+        cout << "输入命令：";
         char input[10];
         cin >> input;
 
         // 检查输入
-        if (input[0] == 'Q' || input[0] == 'q')
+        if ((input[0] == 'X' || input[0] == 'x') && input[1] == '\0')
         {
             game_over = true;
         }
-        else if (input[0] == 'C' || input[0] == 'c')
+        else if ((input[0] == 'Y' || input[0] == 'y') && input[1] == '\0')
         {
             // 验证解答
             int error_row, error_col;
@@ -382,6 +384,13 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                      << (char)('a' + error_col) << endl;
                 system("pause");
             }
+        }
+        else if ((input[0] == 'Z' || input[0] == 'z') && input[1] == '\0')
+        {
+            // 切换作弊模式
+            params.cheat_mode = !params.cheat_mode;
+            cout << (params.cheat_mode ? "已开启" : "已关闭") << "作弊模式" << endl;
+            system("pause");
         }
         else if (input[0] >= 'A' && input[0] <= 'A' + params.rows - 1 && input[1] >= 'a' &&
                  input[1] <= 'a' + params.cols - 1)
@@ -412,6 +421,9 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
 {
     bool game_over = false;
 
+    // 默认关闭作弊模式
+    params.cheat_mode = false;
+
     // 启用鼠标
     cct_enable_mouse();
 
@@ -421,7 +433,10 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
     // 显示操作提示
     cct_setcolor();
     cct_gotoxy(0, 25);
-    cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出" << endl;
+    cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键切换作弊模式"
+         << endl;
+    cct_gotoxy(0, 26);
+    cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
 
     while (!game_over)
     {
@@ -458,7 +473,11 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     // 显示操作提示
                     cct_setcolor();
                     cct_gotoxy(0, 25);
-                    cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出"
+                    cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"
+                            "切换作弊模式"
+                         << endl;
+                    cct_gotoxy(0, 26);
+                    cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式"
                          << endl;
                 }
             }
@@ -469,6 +488,27 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
             if (keycode1 == 'q' || keycode1 == 'Q')
             {
                 game_over = true;
+            }
+            else if (keycode1 == 'z' || keycode1 == 'Z')
+            {
+                // 切换作弊模式
+                params.cheat_mode = !params.cheat_mode;
+
+                // 重绘游戏界面
+                display_game_graphic(matrix, params);
+
+                // 显示操作提示
+                cct_setcolor();
+                cct_gotoxy(0, 25);
+                cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键切换"
+                        "作弊模式"
+                     << endl;
+                cct_gotoxy(0, 26);
+                cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
+                cct_gotoxy(0, 27);
+                cout << (params.cheat_mode ? "已开启" : "已关闭") << "作弊模式                   "
+                     << endl;
+                Sleep(500); // 显示一下切换提示
             }
             else if (keycode1 == '\r')
             {
@@ -517,7 +557,11 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     // 显示操作提示
                     cct_setcolor();
                     cct_gotoxy(0, 25);
-                    cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出"
+                    cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"
+                            "切换作弊模式"
+                         << endl;
+                    cct_gotoxy(0, 26);
+                    cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式"
                          << endl;
                 }
             }

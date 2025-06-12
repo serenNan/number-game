@@ -93,7 +93,6 @@ int main()
 
         case 6: // F.n*n的框架(无分隔线)，显示初始状态，鼠标移动可显示坐标
             params.has_separators = false;
-            params.cheat_mode = true;
             if (get_game_params(params))
             {
                 init_game(matrix, params);
@@ -105,7 +104,6 @@ int main()
 
         case 7: // G.cmd图形界面完整版(无分隔线)
             params.has_separators = false;
-            params.cheat_mode = false;
             if (get_game_params(params))
             {
                 init_game(matrix, params);
@@ -142,7 +140,6 @@ int main()
 
         case 10: // J.n*n的框架(有分隔线)，显示初始状态，鼠标移动可显示坐标
             params.has_separators = true;
-            params.cheat_mode = true;
             if (get_game_params(params))
             {
                 init_game(matrix, params);
@@ -154,7 +151,6 @@ int main()
 
         case 11: // K.cmd图形界面完整版(有分隔线)
             params.has_separators = true;
-            params.cheat_mode = false;
             if (get_game_params(params))
             {
                 init_game(matrix, params);

@@ -322,9 +322,9 @@ void display_cell(int x, int y, CellStatus status, bool has_separators)
     int cell_width = has_separators ? 3 : 2;
     int cell_height = has_separators ? 2 : 1;
 
-    // 计算单元格的屏幕坐标
-    int screen_x = x * cell_width;
-    int screen_y = y * cell_height;
+    // 使用绝对坐标，不再乘以cell_width和cell_height
+    int screen_x = x;
+    int screen_y = y;
 
     // 根据状态设置颜色和内容
     switch (status)
@@ -535,11 +535,11 @@ void display_matrix_graphic(const GameMatrix &matrix, const GameParams &params)
 
             if (params.cheat_mode && matrix.solution[i][j])
             {
-                display_cell(j, i, FILLED, params.has_separators);
+                display_cell(x, y, FILLED, params.has_separators);
             }
             else
             {
-                display_cell(j, i, EMPTY, params.has_separators);
+                display_cell(x, y, EMPTY, params.has_separators);
             }
         }
     }
@@ -594,15 +594,16 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
     {
         for (int j = 0; j < params.cols; j++)
         {
+            int x = matrix_x + 1 + j * cell_width;
+            int y = matrix_y + 1 + i * cell_height;
+
             if (params.cheat_mode && matrix.solution[i][j])
             {
-                display_cell(matrix_x + 1 + j * cell_width, matrix_y + 1 + i * cell_height, FILLED,
-                             params.has_separators);
+                display_cell(x, y, FILLED, params.has_separators);
             }
             else
             {
-                display_cell(matrix_x + 1 + j * cell_width, matrix_y + 1 + i * cell_height, EMPTY,
-                             params.has_separators);
+                display_cell(x, y, EMPTY, params.has_separators);
             }
         }
     }
@@ -624,7 +625,7 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
     // 显示列提示
     for (int j = 0; j < params.cols; j++)
     {
-        int x = matrix_x + j * cell_width + cell_width / 2;
+        int x = matrix_x + j * cell_width + cell_width / 2 + 1; // 右移一列
         int hint_y = matrix_y - 2 - hint_height;
 
         // 下对齐显示

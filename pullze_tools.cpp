@@ -557,7 +557,8 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                          << (error_col + 1) << "      " << endl;
 
                     // 标记错误位置
-                    int cell_width = 2;
+                    int cell_width = params.has_separators ? 5 : 2;
+                    int cell_height = params.has_separators ? 3 : 1;
                     int hint_width = matrix.hint_width * 2;
                     int hint_height = matrix.hint_height;
                     int matrix_x = 5 + hint_width;
@@ -566,12 +567,26 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     // 闪烁提示错误位置
                     for (int i = 0; i < 3; i++)
                     {
-                        cct_gotoxy(matrix_x + error_col * cell_width + 1, matrix_y + error_row + 1);
+                        int x = matrix_x + error_col * cell_width;
+                        int y = matrix_y + error_row * cell_height;
+
+                        if (params.has_separators)
+                        {
+                            x += 2; // 在单元格中心位置
+                            y += 1;
+                        }
+                        else
+                        {
+                            x += 1;
+                            y += 1;
+                        }
+
+                        cct_gotoxy(x, y);
                         cct_setcolor(COLOR_BLACK, COLOR_HRED);
                         cout << "X";
                         Sleep(300);
 
-                        cct_gotoxy(matrix_x + error_col * cell_width + 1, matrix_y + error_row + 1);
+                        cct_gotoxy(x, y);
                         cct_setcolor(COLOR_BLACK, COLOR_WHITE);
                         cout << " ";
                         Sleep(300);

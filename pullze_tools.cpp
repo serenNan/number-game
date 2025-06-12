@@ -280,10 +280,16 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                         else
                             cout << "  ";
                     }
-                    else if (matrix.cells[i][j] == MARKED || matrix.cells[i][j] == MARKED_WRONG)
+                    else if (matrix.cells[i][j] == MARKED)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_HGREEN); // 用户标记为绿色高亮
                         cout << " O";
+                        cct_setcolor(); // 恢复默认颜色
+                    }
+                    else if (matrix.cells[i][j] == MARKED_WRONG)
+                    {
+                        cct_setcolor(COLOR_BLACK, COLOR_HRED); // 错误标记为红色高亮
+                        cout << " X";
                         cct_setcolor(); // 恢复默认颜色
                     }
                     else if (matrix.cells[i][j] == MARKED_NOT)
@@ -315,10 +321,16 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                         else
                             cout << "  ";
                     }
-                    else if (matrix.cells[i][j] == MARKED || matrix.cells[i][j] == MARKED_WRONG)
+                    else if (matrix.cells[i][j] == MARKED)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_HGREEN); // 用户标记为绿色高亮
                         cout << " O";
+                        cct_setcolor(); // 恢复默认颜色
+                    }
+                    else if (matrix.cells[i][j] == MARKED_WRONG)
+                    {
+                        cct_setcolor(COLOR_BLACK, COLOR_HRED); // 错误标记为红色高亮
+                        cout << " X";
                         cct_setcolor(); // 恢复默认颜色
                     }
                     else if (matrix.cells[i][j] == MARKED_NOT)

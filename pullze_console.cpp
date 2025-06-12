@@ -318,80 +318,41 @@ void display_hints_text(const GameMatrix &matrix, const GameParams &params)
 ***************************************************************************/
 void display_cell(int x, int y, CellStatus status, bool has_separators)
 {
-    // 设置单元格的宽度和高度
-    int cell_width = has_separators ? 3 : 2;
-    int cell_height = has_separators ? 2 : 1;
-
-    // 使用绝对坐标，不再乘以cell_width和cell_height
+    // 使用绝对坐标
     int screen_x = x;
     int screen_y = y;
 
-    // 根据状态设置颜色和内容
+    // 根据状态设置内容
     switch (status)
     {
     case EMPTY:
+        // 空格，不显示任何内容
         cct_setcolor(COLOR_BLACK, COLOR_WHITE);
-        if (has_separators)
-        {
-            cct_showstr(screen_x, screen_y, "   ", COLOR_BLACK, COLOR_WHITE);
-            cct_showstr(screen_x, screen_y + 1, "   ", COLOR_BLACK, COLOR_WHITE);
-        }
-        else
-        {
-            cct_showstr(screen_x, screen_y, "  ", COLOR_BLACK, COLOR_WHITE);
-        }
+        cct_showstr(screen_x, screen_y, " ", COLOR_BLACK, COLOR_WHITE);
         break;
 
     case FILLED:
+        // 显示0表示有球，白底黑字
         cct_setcolor(COLOR_BLACK, COLOR_WHITE);
-        if (has_separators)
-        {
-            cct_showstr(screen_x, screen_y, " 0 ", COLOR_BLACK, COLOR_WHITE);
-            cct_showstr(screen_x, screen_y + 1, "   ", COLOR_BLACK, COLOR_WHITE);
-        }
-        else
-        {
-            cct_showstr(screen_x, screen_y, "0 ", COLOR_BLACK, COLOR_WHITE);
-        }
+        cct_showstr(screen_x, screen_y, "0", COLOR_BLACK, COLOR_WHITE);
         break;
 
     case MARKED:
+        // 显示0表示有球，绿底黑字
         cct_setcolor(COLOR_BLACK, COLOR_HGREEN);
-        if (has_separators)
-        {
-            cct_showstr(screen_x, screen_y, " 0 ", COLOR_BLACK, COLOR_HGREEN);
-            cct_showstr(screen_x, screen_y + 1, "   ", COLOR_BLACK, COLOR_HGREEN);
-        }
-        else
-        {
-            cct_showstr(screen_x, screen_y, "0 ", COLOR_BLACK, COLOR_HGREEN);
-        }
+        cct_showstr(screen_x, screen_y, "0", COLOR_BLACK, COLOR_HGREEN);
         break;
 
     case MARKED_WRONG:
+        // 显示X表示错误标记，红底黑字
         cct_setcolor(COLOR_BLACK, COLOR_HRED);
-        if (has_separators)
-        {
-            cct_showstr(screen_x, screen_y, " X ", COLOR_BLACK, COLOR_HRED);
-            cct_showstr(screen_x, screen_y + 1, "   ", COLOR_BLACK, COLOR_HRED);
-        }
-        else
-        {
-            cct_showstr(screen_x, screen_y, "X ", COLOR_BLACK, COLOR_HRED);
-        }
+        cct_showstr(screen_x, screen_y, "X", COLOR_BLACK, COLOR_HRED);
         break;
 
     case MARKED_NOT:
+        // 显示·表示标记为不存在，蓝底黑字
         cct_setcolor(COLOR_BLACK, COLOR_HBLUE);
-        if (has_separators)
-        {
-            cct_showstr(screen_x, screen_y, " · ", COLOR_BLACK, COLOR_HBLUE);
-            cct_showstr(screen_x, screen_y + 1, "   ", COLOR_BLACK, COLOR_HBLUE);
-        }
-        else
-        {
-            cct_showstr(screen_x, screen_y, "· ", COLOR_BLACK, COLOR_HBLUE);
-        }
+        cct_showstr(screen_x, screen_y, "·", COLOR_BLACK, COLOR_HBLUE);
         break;
     }
 
@@ -412,76 +373,30 @@ void display_cell(int x, int y, CellStatus status, bool has_separators)
 ***************************************************************************/
 void draw_frame(int x, int y, int width, int height, bool has_separators)
 {
-    // 框架元素（双线框架）
-    const char *frame_elements[] = {"╔", "╚", "╗", "╝", "═", "║", "╦", "╩", "╠", "╣", "╬"};
+    // 框架元素
+    const char *frame_elements[] = {"╔", "╚", "╗", "╝", "═", "║"};
 
     // 绘制上边框
     cct_showstr(x, y, frame_elements[0], COLOR_BLACK, COLOR_WHITE); // 左上角
     for (int i = 1; i < width - 1; i++)
     {
-        if (has_separators && i % 3 == 0)
-        {
-            cct_showstr(x + i, y, frame_elements[6], COLOR_BLACK, COLOR_WHITE); // 上T型
-        }
-        else
-        {
-            cct_showstr(x + i, y, frame_elements[4], COLOR_BLACK, COLOR_WHITE); // 横线
-        }
+        cct_showstr(x + i, y, frame_elements[4], COLOR_BLACK, COLOR_WHITE); // 横线
     }
     cct_showstr(x + width - 1, y, frame_elements[2], COLOR_BLACK, COLOR_WHITE); // 右上角
 
     // 绘制中间部分
     for (int j = 1; j < height - 1; j++)
     {
-        if (has_separators && j % 2 == 0)
-        {
-            // 分隔行
-            cct_showstr(x, y + j, frame_elements[8], COLOR_BLACK, COLOR_WHITE); // 左T型
-            for (int i = 1; i < width - 1; i++)
-            {
-                if (has_separators && i % 3 == 0)
-                {
-                    cct_showstr(x + i, y + j, frame_elements[10], COLOR_BLACK, COLOR_WHITE); // 十字
-                }
-                else
-                {
-                    cct_showstr(x + i, y + j, frame_elements[4], COLOR_BLACK, COLOR_WHITE); // 横线
-                }
-            }
-            cct_showstr(x + width - 1, y + j, frame_elements[9], COLOR_BLACK, COLOR_WHITE); // 右T型
-        }
-        else
-        {
-            // 常规行
-            cct_showstr(x, y + j, frame_elements[5], COLOR_BLACK, COLOR_WHITE); // 竖线
-            for (int i = 1; i < width - 1; i++)
-            {
-                if (has_separators && i % 3 == 0)
-                {
-                    cct_showstr(x + i, y + j, frame_elements[5], COLOR_BLACK, COLOR_WHITE); // 竖线
-                }
-                else
-                {
-                    cct_showstr(x + i, y + j, " ", COLOR_BLACK, COLOR_WHITE); // 空格
-                }
-            }
-            cct_showstr(x + width - 1, y + j, frame_elements[5], COLOR_BLACK, COLOR_WHITE); // 竖线
-        }
+        // 左右边框
+        cct_showstr(x, y + j, frame_elements[5], COLOR_BLACK, COLOR_WHITE);             // 左边
+        cct_showstr(x + width - 1, y + j, frame_elements[5], COLOR_BLACK, COLOR_WHITE); // 右边
     }
 
     // 绘制下边框
     cct_showstr(x, y + height - 1, frame_elements[1], COLOR_BLACK, COLOR_WHITE); // 左下角
     for (int i = 1; i < width - 1; i++)
     {
-        if (has_separators && i % 3 == 0)
-        {
-            cct_showstr(x + i, y + height - 1, frame_elements[7], COLOR_BLACK,
-                        COLOR_WHITE); // 下T型
-        }
-        else
-        {
-            cct_showstr(x + i, y + height - 1, frame_elements[4], COLOR_BLACK, COLOR_WHITE); // 横线
-        }
+        cct_showstr(x + i, y + height - 1, frame_elements[4], COLOR_BLACK, COLOR_WHITE); // 横线
     }
     cct_showstr(x + width - 1, y + height - 1, frame_elements[3], COLOR_BLACK,
                 COLOR_WHITE); // 右下角
@@ -500,28 +415,27 @@ void display_matrix_graphic(const GameMatrix &matrix, const GameParams &params)
     // 清屏
     cct_cls();
 
-    // 根据是否有分隔线确定单元格大小
-    int cell_width = params.has_separators ? 3 : 2;
-    int cell_height = params.has_separators ? 2 : 1;
+    // 设置单元格大小
+    int cell_width = 2; // 每个单元格占2列
 
     // 计算矩阵大小
     int matrix_width = params.cols * cell_width + 1;
-    int matrix_height = params.rows * cell_height + 1;
+    int matrix_height = params.rows + 2; // 上下边框各占1行，中间是内容行
 
     // 绘制边框
-    draw_frame(5, 3, matrix_width, matrix_height, params.has_separators);
+    draw_frame(5, 3, matrix_width, matrix_height, false);
 
     // 显示列标题（1,2,3,...）
     for (int j = 0; j < params.cols; j++)
     {
-        int x = 5 + j * cell_width + cell_width / 2;
+        int x = 6 + j * cell_width;
         cct_showint(x, 2, j + 1, COLOR_BLACK, COLOR_WHITE);
     }
 
     // 显示行标题（A,B,C,...）
     for (int i = 0; i < params.rows; i++)
     {
-        int y = 3 + i * cell_height + cell_height / 2;
+        int y = 4 + i;
         cct_showch(3, y, 'A' + i, COLOR_BLACK, COLOR_WHITE);
     }
 
@@ -531,18 +445,21 @@ void display_matrix_graphic(const GameMatrix &matrix, const GameParams &params)
         for (int j = 0; j < params.cols; j++)
         {
             int x = 6 + j * cell_width;
-            int y = 3 + i * cell_height + 1;
+            int y = 4 + i;
 
             if (params.cheat_mode && matrix.solution[i][j])
             {
-                display_cell(x, y, FILLED, params.has_separators);
+                display_cell(x, y, FILLED, false);
             }
             else
             {
-                display_cell(x, y, EMPTY, params.has_separators);
+                display_cell(x, y, EMPTY, false);
             }
         }
     }
+
+    // 将光标移动到图形下方，避免"请按任意键继续..."显示在图形中间
+    cct_gotoxy(0, 3 + matrix_height + 2);
 }
 
 /***************************************************************************
@@ -558,34 +475,33 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
     // 清屏
     cct_cls();
 
-    // 根据是否有分隔线确定单元格大小
-    int cell_width = params.has_separators ? 3 : 2;
-    int cell_height = params.has_separators ? 2 : 1;
+    // 设置单元格大小
+    int cell_width = 2; // 每个单元格占2列
 
     // 计算矩阵大小和位置
-    int hint_width = matrix.hint_width * 3;
-    int hint_height = matrix.hint_height * 2;
+    int hint_width = matrix.hint_width * 2;
+    int hint_height = matrix.hint_height;
 
     int matrix_width = params.cols * cell_width + 1;
-    int matrix_height = params.rows * cell_height + 1;
+    int matrix_height = params.rows + 2; // 上下边框各占1行，中间是内容行
 
     int matrix_x = 5 + hint_width;
     int matrix_y = 3 + hint_height;
 
     // 绘制矩阵边框
-    draw_frame(matrix_x, matrix_y, matrix_width, matrix_height, params.has_separators);
+    draw_frame(matrix_x, matrix_y, matrix_width, matrix_height, false);
 
     // 显示列标题（1,2,3,...）
     for (int j = 0; j < params.cols; j++)
     {
-        int x = matrix_x + j * cell_width + cell_width / 2;
+        int x = matrix_x + 1 + j * cell_width;
         cct_showint(x, matrix_y - 1, j + 1, COLOR_BLACK, COLOR_WHITE);
     }
 
     // 显示行标题（A,B,C,...）
     for (int i = 0; i < params.rows; i++)
     {
-        int y = matrix_y + i * cell_height + cell_height / 2;
+        int y = matrix_y + 1 + i;
         cct_showch(matrix_x - 2, y, 'A' + i, COLOR_BLACK, COLOR_WHITE);
     }
 
@@ -595,15 +511,15 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
         for (int j = 0; j < params.cols; j++)
         {
             int x = matrix_x + 1 + j * cell_width;
-            int y = matrix_y + 1 + i * cell_height;
+            int y = matrix_y + 1 + i;
 
             if (params.cheat_mode && matrix.solution[i][j])
             {
-                display_cell(x, y, FILLED, params.has_separators);
+                display_cell(x, y, FILLED, false);
             }
             else
             {
-                display_cell(x, y, EMPTY, params.has_separators);
+                display_cell(x, y, EMPTY, false);
             }
         }
     }
@@ -611,13 +527,13 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
     // 显示行提示
     for (int i = 0; i < params.rows; i++)
     {
-        int y = matrix_y + i * cell_height + cell_height / 2;
-        int hint_x = matrix_x - 3 - hint_width;
+        int y = matrix_y + 1 + i;
+        int hint_x = matrix_x - 2 - hint_width;
 
         // 右对齐显示
         for (int h = 0; h < matrix.row_hint_count[i]; h++)
         {
-            int x = hint_x + (matrix.hint_width - matrix.row_hint_count[i] + h) * 3;
+            int x = hint_x + (matrix.hint_width - matrix.row_hint_count[i] + h) * 2;
             cct_showint(x, y, matrix.row_hints[i][h], COLOR_BLACK, COLOR_WHITE);
         }
     }
@@ -625,16 +541,19 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
     // 显示列提示
     for (int j = 0; j < params.cols; j++)
     {
-        int x = matrix_x + j * cell_width + cell_width / 2 + 1; // 右移一列
-        int hint_y = matrix_y - 2 - hint_height;
+        int x = matrix_x + 1 + j * cell_width;
+        int hint_y = matrix_y - 1 - hint_height;
 
         // 下对齐显示
         for (int h = 0; h < matrix.col_hint_count[j]; h++)
         {
-            int y = hint_y + (matrix.hint_height - matrix.col_hint_count[j] + h) * 2;
+            int y = hint_y + (matrix.hint_height - matrix.col_hint_count[j] + h);
             cct_showint(x, y, matrix.col_hints[j][h], COLOR_BLACK, COLOR_WHITE);
         }
     }
+
+    // 将光标移动到图形下方，避免"请按任意键继续..."显示在图形中间
+    cct_gotoxy(0, matrix_y + matrix_height + 2);
 }
 
 /***************************************************************************
@@ -668,9 +587,8 @@ void display_mouse_position(int mx, int my, const GameParams &params)
 void convert_mouse_to_cell(int mx, int my, int &row, int &col, const GameParams &params,
                            bool &is_valid)
 {
-    // 根据是否有分隔线确定单元格大小
-    int cell_width = params.has_separators ? 3 : 2;
-    int cell_height = params.has_separators ? 2 : 1;
+    // 设置单元格大小
+    int cell_width = 2; // 每个单元格占2列
 
     // 计算矩阵大小和位置
     int hint_width = 0;
@@ -680,26 +598,12 @@ void convert_mouse_to_cell(int mx, int my, int &row, int &col, const GameParams 
     int matrix_y = 3 + hint_height;
 
     // 检查鼠标是否在矩阵区域内
-    if (mx >= matrix_x && mx < matrix_x + params.cols * cell_width + 1 && my >= matrix_y &&
-        my < matrix_y + params.rows * cell_height + 1)
+    if (mx >= matrix_x + 1 && mx < matrix_x + params.cols * cell_width && my >= matrix_y + 1 &&
+        my < matrix_y + params.rows + 1)
     {
-
         // 计算行列索引
-        col = (mx - matrix_x) / cell_width;
-        row = (my - matrix_y) / cell_height;
-
-        // 检查鼠标是否在分隔线上
-        if (params.has_separators)
-        {
-            int cell_x = (mx - matrix_x) % cell_width;
-            int cell_y = (my - matrix_y) % cell_height;
-
-            if (cell_x == 0 || cell_y == 0)
-            {
-                is_valid = false;
-                return;
-            }
-        }
+        col = (mx - matrix_x - 1) / cell_width;
+        row = (my - matrix_y - 1);
 
         // 检查行列是否在有效范围内
         if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)

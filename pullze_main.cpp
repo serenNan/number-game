@@ -1,4 +1,5 @@
 #include "pullze.h"
+#include <conio.h>
 
 /***************************************************************************
   函数名称：main
@@ -38,7 +39,9 @@ int main()
                 init_game(matrix, params);
                 generate_matrix(matrix, params);
                 display_matrix_text(matrix, params);
-                system("pause");
+                cout << "本小题结束，请输入End继续...";
+                char end_str[10];
+                cin >> end_str;
             }
             break;
 
@@ -51,7 +54,9 @@ int main()
                 generate_matrix(matrix, params);
                 calculate_hints(matrix, params);
                 display_hints_text(matrix, params);
-                system("pause");
+                cout << "本小题结束，请输入End继续...";
+                char end_str[10];
+                cin >> end_str;
             }
             break;
 
@@ -74,7 +79,8 @@ int main()
                 init_game(matrix, params);
                 generate_matrix(matrix, params);
                 display_matrix_graphic(matrix, params);
-                system("pause");
+                cout << "请按任意键继续...";
+                _getch();
             }
             break;
 
@@ -87,7 +93,8 @@ int main()
                 generate_matrix(matrix, params);
                 calculate_hints(matrix, params);
                 display_game_graphic(matrix, params);
-                system("pause");
+                cout << "请按任意键继续...";
+                _getch();
             }
             break;
 
@@ -121,7 +128,8 @@ int main()
                 init_game(matrix, params);
                 generate_matrix(matrix, params);
                 display_matrix_graphic(matrix, params);
-                system("pause");
+                cout << "请按任意键继续...";
+                _getch();
             }
             break;
 
@@ -134,7 +142,8 @@ int main()
                 generate_matrix(matrix, params);
                 calculate_hints(matrix, params);
                 display_game_graphic(matrix, params);
-                system("pause");
+                cout << "请按任意键继续...";
+                _getch();
             }
             break;
 

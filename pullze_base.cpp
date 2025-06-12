@@ -242,22 +242,8 @@ void mark_cell(GameMatrix &matrix, const GameParams &params, int row, int col, i
     { // 左键 - 标记为有球
         if (matrix.cells[row][col] == EMPTY || matrix.cells[row][col] == MARKED_NOT)
         {
-            // 如果是作弊模式，检查是否正确
-            if (params.cheat_mode)
-            {
-                if (matrix.solution[row][col])
-                {
-                    matrix.cells[row][col] = MARKED;
-                }
-                else
-                {
-                    matrix.cells[row][col] = MARKED_WRONG;
-                }
-            }
-            else
-            {
-                matrix.cells[row][col] = MARKED;
-            }
+            // 不再区分是否正确，统一使用MARKED状态
+            matrix.cells[row][col] = MARKED;
         }
         else if (matrix.cells[row][col] == MARKED || matrix.cells[row][col] == MARKED_WRONG)
         {

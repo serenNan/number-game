@@ -369,15 +369,15 @@ void display_cell(int x, int y, CellStatus status, bool has_separators)
         break;
 
     case MARKED_WRONG:
-        cct_setcolor(COLOR_BLACK, COLOR_HRED);
+        cct_setcolor(COLOR_BLACK, COLOR_HGREEN);
         if (has_separators)
         {
-            cct_showstr(screen_x, screen_y, " X ", COLOR_BLACK, COLOR_HRED);
-            cct_showstr(screen_x, screen_y + 1, "   ", COLOR_BLACK, COLOR_HRED);
+            cct_showstr(screen_x, screen_y, " 0 ", COLOR_BLACK, COLOR_HGREEN);
+            cct_showstr(screen_x, screen_y + 1, "   ", COLOR_BLACK, COLOR_HGREEN);
         }
         else
         {
-            cct_showstr(screen_x, screen_y, "X ", COLOR_BLACK, COLOR_HRED);
+            cct_showstr(screen_x, screen_y, "0 ", COLOR_BLACK, COLOR_HGREEN);
         }
         break;
 

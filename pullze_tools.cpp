@@ -274,21 +274,23 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                     if (matrix.cells[i][j] == EMPTY)
                     {
                         if (params.cheat_mode && matrix.solution[i][j])
-                            cout << " O";
+                        {
+                            cout << " O"; // 作弊模式显示普通的O
+                        }
                         else
                             cout << "  ";
                     }
-                    else if (matrix.cells[i][j] == MARKED)
+                    else if (matrix.cells[i][j] == MARKED || matrix.cells[i][j] == MARKED_WRONG)
                     {
+                        cct_setcolor(COLOR_BLACK, COLOR_HGREEN); // 用户标记为绿色高亮
                         cout << " O";
-                    }
-                    else if (matrix.cells[i][j] == MARKED_WRONG)
-                    {
-                        cout << " X";
+                        cct_setcolor(); // 恢复默认颜色
                     }
                     else if (matrix.cells[i][j] == MARKED_NOT)
                     {
+                        cct_setcolor(COLOR_BLACK, COLOR_HBLUE); // 标记为不存在为蓝色高亮
                         cout << " ·";
+                        cct_setcolor(); // 恢复默认颜色
                     }
                 }
                 else
@@ -307,21 +309,23 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                     if (matrix.cells[i][j] == EMPTY)
                     {
                         if (params.cheat_mode && matrix.solution[i][j])
-                            cout << " O";
+                        {
+                            cout << " O"; // 作弊模式显示普通的O
+                        }
                         else
                             cout << "  ";
                     }
-                    else if (matrix.cells[i][j] == MARKED)
+                    else if (matrix.cells[i][j] == MARKED || matrix.cells[i][j] == MARKED_WRONG)
                     {
+                        cct_setcolor(COLOR_BLACK, COLOR_HGREEN); // 用户标记为绿色高亮
                         cout << " O";
-                    }
-                    else if (matrix.cells[i][j] == MARKED_WRONG)
-                    {
-                        cout << " X";
+                        cct_setcolor(); // 恢复默认颜色
                     }
                     else if (matrix.cells[i][j] == MARKED_NOT)
                     {
+                        cct_setcolor(COLOR_BLACK, COLOR_HBLUE); // 标记为不存在为蓝色高亮
                         cout << " ·";
+                        cct_setcolor(); // 恢复默认颜色
                     }
                 }
                 else

@@ -469,7 +469,12 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                 int row, col;
                 bool is_valid;
 
-                convert_mouse_to_cell(mx, my, row, col, params, is_valid);
+                // 计算提示区域大小
+                int hint_width = matrix.hint_width * 2;
+                int hint_height = matrix.hint_height;
+
+                // 更新鼠标坐标转换函数
+                convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
 
                 if (is_valid)
                 {
@@ -544,24 +549,21 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                          << (error_col + 1) << "      " << endl;
 
                     // 标记错误位置
-                    int cell_width = params.has_separators ? 3 : 2;
-                    int cell_height = params.has_separators ? 2 : 1;
-                    int hint_width = matrix.hint_width * 3;
-                    int hint_height = matrix.hint_height * 2;
+                    int cell_width = 2;
+                    int hint_width = matrix.hint_width * 2;
+                    int hint_height = matrix.hint_height;
                     int matrix_x = 5 + hint_width;
                     int matrix_y = 3 + hint_height;
 
                     // 闪烁提示错误位置
                     for (int i = 0; i < 3; i++)
                     {
-                        cct_gotoxy(matrix_x + error_col * cell_width + 1,
-                                   matrix_y + error_row * cell_height + 1);
+                        cct_gotoxy(matrix_x + error_col * cell_width + 1, matrix_y + error_row + 1);
                         cct_setcolor(COLOR_BLACK, COLOR_HRED);
                         cout << "X";
                         Sleep(300);
 
-                        cct_gotoxy(matrix_x + error_col * cell_width + 1,
-                                   matrix_y + error_row * cell_height + 1);
+                        cct_gotoxy(matrix_x + error_col * cell_width + 1, matrix_y + error_row + 1);
                         cct_setcolor(COLOR_BLACK, COLOR_WHITE);
                         cout << " ";
                         Sleep(300);

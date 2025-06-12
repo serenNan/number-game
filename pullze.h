@@ -60,7 +60,7 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params);
 void display_cell(int x, int y, CellStatus status, bool has_separators);
 void display_mouse_position(int mx, int my, const GameParams &params);
 void convert_mouse_to_cell(int mx, int my, int &row, int &col, const GameParams &params,
-                           bool &is_valid);
+                           const GameMatrix &matrix, bool &is_valid);
 
 /* ¹¤¾ßº¯Êý - puzzle_tools.cpp */
 int show_menu();

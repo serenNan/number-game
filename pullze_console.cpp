@@ -488,6 +488,20 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
     int matrix_x = 5 + hint_width;
     int matrix_y = 3 + hint_height;
 
+    // 绘制行提示边框
+    int row_hint_x = matrix_x - hint_width - 2;
+    int row_hint_y = matrix_y;
+    int row_hint_width = hint_width;
+    int row_hint_height = matrix_height;
+    draw_frame(row_hint_x, row_hint_y, row_hint_width, row_hint_height, false);
+
+    // 绘制列提示边框
+    int col_hint_x = matrix_x;
+    int col_hint_y = matrix_y - hint_height - 1;
+    int col_hint_width = matrix_width;
+    int col_hint_height = hint_height + 1;
+    draw_frame(col_hint_x, col_hint_y, col_hint_width, col_hint_height, false);
+
     // 绘制矩阵边框
     draw_frame(matrix_x, matrix_y, matrix_width, matrix_height, false);
 
@@ -528,7 +542,7 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
     for (int i = 0; i < params.rows; i++)
     {
         int y = matrix_y + 1 + i;
-        int hint_x = matrix_x - 2 - hint_width;
+        int hint_x = row_hint_x + 1; // 在行提示框内部开始
 
         // 右对齐显示
         for (int h = 0; h < matrix.row_hint_count[i]; h++)
@@ -542,7 +556,7 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
     for (int j = 0; j < params.cols; j++)
     {
         int x = matrix_x + 1 + j * cell_width;
-        int hint_y = matrix_y - 1 - hint_height;
+        int hint_y = col_hint_y + 1; // 在列提示框内部开始
 
         // 下对齐显示
         for (int h = 0; h < matrix.col_hint_count[j]; h++)
@@ -580,25 +594,26 @@ void display_mouse_position(int mx, int my, const GameParams &params)
             int& row - 返回行索引
             int& col - 返回列索引
             const GameParams& params - 游戏参数
+            const GameMatrix& matrix - 游戏矩阵
             bool& is_valid - 返回是否有效
   返 回 值：无
   说    明：检查鼠标是否在有效的矩阵区域内，并转换坐标
 ***************************************************************************/
 void convert_mouse_to_cell(int mx, int my, int &row, int &col, const GameParams &params,
-                           bool &is_valid)
+                           const GameMatrix &matrix, bool &is_valid)
 {
     // 设置单元格大小
     int cell_width = 2; // 每个单元格占2列
 
     // 计算矩阵大小和位置
-    int hint_width = 0;
-    int hint_height = 0;
+    int hint_width = matrix.hint_width * 2;
+    int hint_height = matrix.hint_height;
 
     int matrix_x = 5 + hint_width;
     int matrix_y = 3 + hint_height;
 
     // 检查鼠标是否在矩阵区域内
-    if (mx >= matrix_x + 1 && mx < matrix_x + params.cols * cell_width && my >= matrix_y + 1 &&
+    if (mx >= matrix_x + 1 && mx < matrix_x + params.cols * cell_width + 1 && my >= matrix_y + 1 &&
         my < matrix_y + params.rows + 1)
     {
         // 计算行列索引

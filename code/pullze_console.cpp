@@ -759,20 +759,34 @@ void convert_mouse_to_cell(int mx, int my, int &row, int &col, const GameParams 
     int matrix_y = 3 + hint_height;
 
     // 检查鼠标是否在矩阵区域内
-    if (mx >= matrix_x && mx < matrix_x + params.cols * cell_width + 1 && my >= matrix_y &&
-        my < matrix_y + params.rows * cell_height + 1)
+    if (params.has_separators)
     {
-        // 计算行列索引
-        col = (mx - matrix_x) / cell_width;
-        row = (my - matrix_y) / cell_height;
-
-        // 检查行列是否在有效范围内
-        if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)
+        if (mx >= matrix_x && mx < matrix_x + params.cols * cell_width + 1 && my >= matrix_y &&
+            my < matrix_y + params.rows * cell_height + 1)
         {
-            is_valid = true;
-            return;
+            col = (mx - matrix_x) / cell_width;
+            row = (my - matrix_y) / cell_height;
+            if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)
+            {
+                is_valid = true;
+                return;
+            }
         }
     }
-
+    else
+    {
+        // 无分隔线模式下，内容显示时有+1偏移，坐标也要修正
+        if (mx >= matrix_x + 1 && mx < matrix_x + 1 + params.cols * cell_width &&
+            my >= matrix_y + 1 && my < matrix_y + 1 + params.rows * cell_height)
+        {
+            col = (mx - matrix_x - 1) / cell_width;
+            row = (my - matrix_y - 1) / cell_height;
+            if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)
+            {
+                is_valid = true;
+                return;
+            }
+        }
+    }
     is_valid = false;
 }

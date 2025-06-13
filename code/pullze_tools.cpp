@@ -552,8 +552,15 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     cct_setcolor();
                     Sleep(120);
 
-                    // 标记单元格
-                    mark_cell(matrix, params, row, col, markType);
+                    // 标记单元格，左键点击时如果已是MARKED则不重复标记
+                    if (markType == 1 && matrix.cells[row][col] == MARKED)
+                    {
+                        // 已经标记为O，不做任何操作
+                    }
+                    else
+                    {
+                        mark_cell(matrix, params, row, col, markType);
+                    }
 
                     // 只刷新当前单元格显示，区分作弊模式和普通模式O的颜色
                     cct_gotoxy(x, y);
@@ -585,7 +592,6 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     cct_setcolor();
                     cct_gotoxy(0, 25);
                     cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"
-                            "切换作弊模式"
                             "切换作弊模式"
                          << endl;
                     cct_gotoxy(0, 26);

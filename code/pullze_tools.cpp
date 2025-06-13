@@ -552,14 +552,18 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     cct_setcolor();
                     Sleep(120);
 
-                    // 标记单元格，左键点击时如果已是MARKED则不重复标记
+                    // 修改：左键标记，右键直接清空
                     if (markType == 1 && matrix.cells[row][col] == MARKED)
                     {
                         // 已经标记为O，不做任何操作
                     }
-                    else
+                    else if (markType == 1)
                     {
-                        mark_cell(matrix, params, row, col, markType);
+                        mark_cell(matrix, params, row, col, 1);
+                    }
+                    else if (markType == 2)
+                    {
+                        matrix.cells[row][col] = EMPTY;
                     }
 
                     // 只刷新当前单元格显示，区分作弊模式和普通模式O的颜色
@@ -574,12 +578,6 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_WHITE);
                         cout << "O";
-                        cct_setcolor();
-                    }
-                    else if (matrix.cells[row][col] == MARKED_NOT)
-                    {
-                        cct_setcolor(COLOR_BLACK, COLOR_HBLUE);
-                        cout << "·";
                         cct_setcolor();
                     }
                     else

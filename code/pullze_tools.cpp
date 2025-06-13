@@ -552,7 +552,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     cct_setcolor();
                     Sleep(120);
 
-                    // 修改：左键标记为O，右键标记为X
+                    // 修改：左键标记为O，右键只消除左键做的标记
                     if (markType == 1) // 左键点击
                     {
                         // 左键标记为O
@@ -560,8 +560,11 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     }
                     else if (markType == 2) // 右键点击
                     {
-                        // 右键标记为X
-                        matrix.cells[row][col] = MARKED_NOT;
+                        // 右键只消除左键做的标记，如果当前是MARKED状态则清除，否则不做任何操作
+                        if (matrix.cells[row][col] == MARKED)
+                        {
+                            matrix.cells[row][col] = EMPTY;
+                        }
                     }
 
                     // 刷新单元格显示

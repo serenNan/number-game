@@ -340,41 +340,65 @@ void display_cell(int x, int y, CellStatus status, bool has_separators)
         break;
 
     case FILLED:
-        // 显示0表示有球，白底黑字
+        // 显示O表示有球，白底黑字
         cct_setcolor(COLOR_BLACK, COLOR_WHITE);
         if (has_separators)
         {
-            cct_showstr(screen_x, screen_y, "〇", COLOR_BLACK, COLOR_WHITE);
+            cct_showstr(screen_x, screen_y, "O", COLOR_BLACK, COLOR_WHITE);
         }
         else
         {
-            cct_showstr(screen_x, screen_y, "0", COLOR_BLACK, COLOR_WHITE);
+            cct_showstr(screen_x, screen_y, "O", COLOR_BLACK, COLOR_WHITE);
         }
         break;
 
     case MARKED:
-        // 显示0表示有球，绿底黑字
-        cct_setcolor(COLOR_BLACK, COLOR_HGREEN);
-        if (has_separators)
-        {
-            cct_showstr(screen_x, screen_y, "〇", COLOR_BLACK, COLOR_HGREEN);
-        }
-        else
-        {
-            cct_showstr(screen_x, screen_y, "0", COLOR_BLACK, COLOR_HGREEN);
-        }
+        // 正常模式下：蓝色背景O（左键选择）
+        cct_setcolor(COLOR_HBLUE, COLOR_BLACK);
+        cct_showstr(screen_x, screen_y, "O", COLOR_HBLUE, COLOR_BLACK);
         break;
 
     case MARKED_WRONG:
         // 显示X表示错误标记，红底黑字
-        cct_setcolor(COLOR_BLACK, COLOR_HRED);
-        cct_showstr(screen_x, screen_y, "X", COLOR_BLACK, COLOR_HRED);
+        cct_setcolor(COLOR_HRED, COLOR_BLACK);
+        cct_showstr(screen_x, screen_y, "X", COLOR_HRED, COLOR_BLACK);
         break;
 
     case MARKED_NOT:
-        // 显示·表示标记为不存在，蓝底黑字
-        cct_setcolor(COLOR_BLACK, COLOR_HBLUE);
-        cct_showstr(screen_x, screen_y, "·", COLOR_BLACK, COLOR_HBLUE);
+        // 正常模式下：红色背景X（右键标注）
+        cct_setcolor(COLOR_HRED, COLOR_BLACK);
+        cct_showstr(screen_x, screen_y, "X", COLOR_HRED, COLOR_BLACK);
+        break;
+        
+    // 以下是作弊模式下的新增显示状态
+    case CHEAT_EMPTY:
+        // 灰色背景O：有球但尚未选择
+        cct_setcolor(COLOR_HBLACK, COLOR_BLACK);
+        cct_showstr(screen_x, screen_y, "O", COLOR_HBLACK, COLOR_BLACK);
+        break;
+        
+    case CHEAT_MARKED:
+        // 蓝色背景O：有球且已左键选择
+        cct_setcolor(COLOR_HBLUE, COLOR_BLACK);
+        cct_showstr(screen_x, screen_y, "O", COLOR_HBLUE, COLOR_BLACK);
+        break;
+        
+    case CHEAT_WRONG:
+        // 红色背景O：无球但已左键选择
+        cct_setcolor(COLOR_HRED, COLOR_BLACK);
+        cct_showstr(screen_x, screen_y, "O", COLOR_HRED, COLOR_BLACK);
+        break;
+        
+    case CHEAT_NOT_RIGHT:
+        // 红色背景X：无球且右键标注
+        cct_setcolor(COLOR_HRED, COLOR_BLACK);
+        cct_showstr(screen_x, screen_y, "X", COLOR_HRED, COLOR_BLACK);
+        break;
+        
+    case CHEAT_BALL_RIGHT:
+        // 蓝色背景X：有球但已右键标注
+        cct_setcolor(COLOR_HBLUE, COLOR_BLACK);
+        cct_showstr(screen_x, screen_y, "X", COLOR_HBLUE, COLOR_BLACK);
         break;
     }
 
@@ -664,12 +688,43 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
                 y = matrix_y + i * 3 + 1;          // 单元格左上角
             }
 
-            if (params.cheat_mode && matrix.solution[i][j] && matrix.cells[i][j] == EMPTY)
+            if (params.cheat_mode)
             {
-                display_cell(x, y, FILLED, params.has_separators);
+                // 作弊模式下的显示逻辑
+                if (matrix.solution[i][j]) // 有球
+                {
+                    if (matrix.cells[i][j] == EMPTY) // 有球但尚未选择
+                    {
+                        display_cell(x, y, CHEAT_EMPTY, params.has_separators);
+                    }
+                    else if (matrix.cells[i][j] == MARKED) // 有球且已左键选择
+                    {
+                        display_cell(x, y, CHEAT_MARKED, params.has_separators);
+                    }
+                    else if (matrix.cells[i][j] == MARKED_NOT) // 有球但已右键标注
+                    {
+                        display_cell(x, y, CHEAT_BALL_RIGHT, params.has_separators);
+                    }
+                }
+                else // 无球
+                {
+                    if (matrix.cells[i][j] == MARKED) // 无球但已左键选择
+                    {
+                        display_cell(x, y, CHEAT_WRONG, params.has_separators);
+                    }
+                    else if (matrix.cells[i][j] == MARKED_NOT) // 无球且右键标注
+                    {
+                        display_cell(x, y, CHEAT_NOT_RIGHT, params.has_separators);
+                    }
+                    else // 无球且未选择
+                    {
+                        display_cell(x, y, EMPTY, params.has_separators);
+                    }
+                }
             }
             else
             {
+                // 正常模式下的显示逻辑
                 display_cell(x, y, matrix.cells[i][j], params.has_separators);
             }
         }

@@ -17,9 +17,15 @@ enum CellStatus
 {
     EMPTY = 0,        // 空
     FILLED = 1,       // 有球
-    MARKED = 2,       // 标记为有球
+    MARKED = 2,       // 标记为有球(左键)
     MARKED_WRONG = 3, // 标记错误
-    MARKED_NOT = 4    // 标记为没有球
+    MARKED_NOT = 4,   // 标记为没有球(右键)
+    // 新增状态，用于作弊模式下的不同显示
+    CHEAT_EMPTY = 5,     // 作弊模式下：有球但尚未选择(灰色O)
+    CHEAT_MARKED = 6,    // 作弊模式下：有球且已左键选择(蓝色O)
+    CHEAT_WRONG = 7,     // 作弊模式下：无球但已左键选择(红色O)
+    CHEAT_NOT_RIGHT = 8, // 作弊模式下：无球且右键标注(红色×)
+    CHEAT_BALL_RIGHT = 9 // 作弊模式下：有球但已右键标注(蓝色×)
 };
 
 /* 游戏参数结构体 */

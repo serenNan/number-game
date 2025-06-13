@@ -552,40 +552,20 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     cct_setcolor();
                     Sleep(120);
 
-                    // 修改：左键标记，右键直接清空
-                    if (markType == 1 && matrix.cells[row][col] == MARKED)
+                    // 修改：左键标记为O，右键标记为X
+                    if (markType == 1) // 左键点击
                     {
-                        // 已经标记为O，不做任何操作
+                        // 左键标记为O
+                        matrix.cells[row][col] = MARKED;
                     }
-                    else if (markType == 1)
+                    else if (markType == 2) // 右键点击
                     {
-                        mark_cell(matrix, params, row, col, 1);
-                    }
-                    else if (markType == 2)
-                    {
-                        matrix.cells[row][col] = EMPTY;
+                        // 右键标记为X
+                        matrix.cells[row][col] = MARKED_NOT;
                     }
 
-                    // 只刷新当前单元格显示，区分作弊模式和普通模式O的颜色
-                    cct_gotoxy(x, y);
-                    if (matrix.cells[row][col] == MARKED && !params.cheat_mode)
-                    {
-                        cct_setcolor(COLOR_BLACK, COLOR_HGREEN);
-                        cout << "O";
-                        cct_setcolor();
-                    }
-                    else if (matrix.cells[row][col] == MARKED && params.cheat_mode)
-                    {
-                        cct_setcolor(COLOR_BLACK, COLOR_WHITE);
-                        cout << "O";
-                        cct_setcolor();
-                    }
-                    else
-                    {
-                        cct_setcolor(COLOR_BLACK, COLOR_WHITE);
-                        cout << " ";
-                        cct_setcolor();
-                    }
+                    // 刷新单元格显示
+                    display_game_graphic(matrix, params);
 
                     cct_setcolor();
                     cct_gotoxy(0, 25);

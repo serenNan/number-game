@@ -435,6 +435,14 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
 ***************************************************************************/
 void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
 {
+    // 兼容Win11，确保鼠标事件能被捕获
+    HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode = 0;
+    GetConsoleMode(hInput, &mode);
+    mode &= ~ENABLE_QUICK_EDIT_MODE;
+    mode |= ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS;
+    SetConsoleMode(hInput, mode);
+
     bool game_over = false;
 
     // 默认关闭作弊模式
@@ -623,6 +631,14 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
 ***************************************************************************/
 void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
 {
+    // 兼容Win11，确保鼠标事件能被捕获
+    HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode = 0;
+    GetConsoleMode(hInput, &mode);
+    mode &= ~ENABLE_QUICK_EDIT_MODE;
+    mode |= ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS;
+    SetConsoleMode(hInput, mode);
+
     bool quit = false;
 
     // 默认开启作弊模式以显示解答

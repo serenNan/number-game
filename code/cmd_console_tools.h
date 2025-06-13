@@ -1,11 +1,11 @@
+#pragma once
 /* -----------------------------------------
 
      本文件不需要提交、不允许改动
 
    ----------------------------------------- */
-#pragma once
 
-/* 定义颜色（用宏定义取代数字，方便记忆） */
+   /* 定义颜色（用宏定义取代数字，方便记忆） */
 #define COLOR_BLACK		0	//黑
 #define COLOR_BLUE		1	//蓝
 #define COLOR_GREEN		2	//绿
@@ -54,30 +54,29 @@
 /* cmd_console_tools.cpp下的函数声明 */
 
 /* 清屏、颜色设置、光标设置、字符/字符串显示 */
-void cct_cls      (void);
-void cct_setcolor (const int bg_color = COLOR_BLACK, const int fg_color = COLOR_WHITE);
-void cct_getcolor (int &bg_color, int &fg_color);
-void cct_gotoxy   (const int X, const int Y);
-void cct_getxy    (int &x, int &y);
+void cct_cls(void);
+void cct_setcolor(const int bg_color = COLOR_BLACK, const int fg_color = COLOR_WHITE);
+void cct_getcolor(int& bg_color, int& fg_color);
+void cct_gotoxy(const int X, const int Y);
+void cct_getxy(int& x, int& y);
 void cct_setcursor(const int options);
-void cct_showch   (const int X, const int Y, const char ch, const int bg_color = COLOR_BLACK, const int fg_color = COLOR_WHITE, const int rpt = 1);
-void cct_showstr  (const int X, const int Y, const char *str, const int bg_color = COLOR_BLACK, const int fg_color = COLOR_WHITE, int rpt = 1, int max_len=-1);
-void cct_showint  (const int X, const int Y, const int num, const int bg_color = COLOR_BLACK, const int fg_color = COLOR_WHITE, const int rpt = 1);
+void cct_showch(const int X, const int Y, const char ch, const int bg_color = COLOR_BLACK, const int fg_color = COLOR_WHITE, const int rpt = 1);
+void cct_showstr(const int X, const int Y, const char* str, const int bg_color = COLOR_BLACK, const int fg_color = COLOR_WHITE, int rpt = 1, int max_len = -1);
+void cct_showint(const int X, const int Y, const int num, const int bg_color = COLOR_BLACK, const int fg_color = COLOR_WHITE, const int rpt = 1);
 
 /* 与窗口大小有关的函数 */
 void cct_setconsoleborder(int set_cols, int set_lines, int set_buffer_cols = -1, int set_buffer_lines = -1);
-void cct_getconsoleborder(int &cols, int &lines, int &buffer_cols, int &buffer_lines);
+void cct_getconsoleborder(int& cols, int& lines, int& buffer_cols, int& buffer_lines);
 
 /* 有标题栏有关的函数 */
-void cct_getconsoletitle (char *title, int maxbuflen);
-void cct_setconsoletitle (const char *title);
+void cct_getconsoletitle(char* title, int maxbuflen);
+void cct_setconsoletitle(const char* title);
 
 /* 与鼠标操作有关的函数 */
-void cct_enable_mouse           (void);
-void cct_disable_mouse          (void);
-int  cct_read_keyboard_and_mouse(int &MX, int &MY, int &MAction, int &keycode1, int &keycode2);
+void cct_enable_mouse(void);
+void cct_disable_mouse(void);
+int  cct_read_keyboard_and_mouse(int& MX, int& MY, int& MAction, int& keycode1, int& keycode2);
 
 /* 与字体及字号设置有关的函数 */
 int  cct_getfontinfo(void);
-void cct_setfontsize(const char *fontname, const int high, const int width = 0);
-
+void cct_setfontsize(const char* fontname, const int high, const int width = 0);

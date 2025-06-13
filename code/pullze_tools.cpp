@@ -555,7 +555,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     // 标记单元格
                     mark_cell(matrix, params, row, col, markType);
 
-                    // 恢复显示，区分作弊模式和普通模式O的颜色
+                    // 只刷新当前单元格显示，区分作弊模式和普通模式O的颜色
                     cct_gotoxy(x, y);
                     if (matrix.cells[row][col] == MARKED && !params.cheat_mode)
                     {
@@ -569,15 +569,23 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                         cout << "O";
                         cct_setcolor();
                     }
+                    else if (matrix.cells[row][col] == MARKED_NOT)
+                    {
+                        cct_setcolor(COLOR_BLACK, COLOR_HBLUE);
+                        cout << "·";
+                        cct_setcolor();
+                    }
                     else
                     {
-                        // 其他情况重绘整个界面
-                        display_game_graphic(matrix, params);
+                        cct_setcolor(COLOR_BLACK, COLOR_WHITE);
+                        cout << " ";
+                        cct_setcolor();
                     }
 
                     cct_setcolor();
                     cct_gotoxy(0, 25);
                     cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"
+                            "切换作弊模式"
                             "切换作弊模式"
                          << endl;
                     cct_gotoxy(0, 26);

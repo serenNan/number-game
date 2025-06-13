@@ -514,8 +514,67 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                 if (is_valid)
                 {
                     int markType = (btn & FROM_LEFT_1ST_BUTTON_PRESSED) ? 1 : 2;
+                    // 高亮显示点击位置（背景高亮，内容为空格）
+                    int cell_width = params.has_separators ? 5 : 2;
+                    int cell_height = params.has_separators ? 3 : 1;
+                    int hint_width = matrix.hint_width * 2;
+                    int hint_height = matrix.hint_height;
+                    int matrix_x = 5 + hint_width;
+                    int matrix_y = 3 + hint_height;
+                    int x = matrix_x + col * cell_width;
+                    int y = matrix_y + row * cell_height;
+                    if (params.has_separators)
+                    {
+                        x += 2;
+                        y += 1;
+                    }
+                    else
+                    {
+                        x += 1;
+                        y += 1;
+                    }
+                    cct_gotoxy(x, y);
+                    if (btn & FROM_LEFT_1ST_BUTTON_PRESSED)
+                    {
+                        cct_setcolor(COLOR_HGREEN, COLOR_BLACK);
+                        cout << " ";
+                    }
+                    else if (btn & RIGHTMOST_BUTTON_PRESSED)
+                    {
+                        cct_setcolor(COLOR_HRED, COLOR_BLACK);
+                        cout << " ";
+                    }
+                    else
+                    {
+                        cct_setcolor(COLOR_HYELLOW, COLOR_BLACK);
+                        cout << " ";
+                    }
+                    cct_setcolor();
+                    Sleep(120);
+
+                    // 标记单元格
                     mark_cell(matrix, params, row, col, markType);
-                    display_game_graphic(matrix, params);
+
+                    // 恢复显示，区分作弊模式和普通模式O的颜色
+                    cct_gotoxy(x, y);
+                    if (matrix.cells[row][col] == MARKED && !params.cheat_mode)
+                    {
+                        cct_setcolor(COLOR_BLACK, COLOR_HGREEN);
+                        cout << "O";
+                        cct_setcolor();
+                    }
+                    else if (matrix.cells[row][col] == MARKED && params.cheat_mode)
+                    {
+                        cct_setcolor(COLOR_BLACK, COLOR_WHITE);
+                        cout << "O";
+                        cct_setcolor();
+                    }
+                    else
+                    {
+                        // 其他情况重绘整个界面
+                        display_game_graphic(matrix, params);
+                    }
+
                     cct_setcolor();
                     cct_gotoxy(0, 25);
                     cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"

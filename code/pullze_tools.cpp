@@ -464,20 +464,27 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
     cct_gotoxy(0, 26);
     cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
 
+    INPUT_RECORD ir;
+    DWORD read;
     while (!game_over)
     {
-        int mx, my, maction, keycode1, keycode2;
-        int ret = cct_read_keyboard_and_mouse(mx, my, maction, keycode1, keycode2);
-
-        if (ret == CCT_MOUSE_EVENT)
+        ReadConsoleInput(hInput, &ir, 1, &read);
+        if (ir.EventType == MOUSE_EVENT)
         {
-            // 只有坐标变化时才刷新显示，减少闪烁
+            auto &me = ir.Event.MouseEvent;
+            int mx = me.dwMousePosition.X;
+            int my = me.dwMousePosition.Y;
+            DWORD btn = me.dwButtonState;
+            DWORD evt = me.dwEventFlags;
+
+            // 只有坐标变化时刷新显示，减少闪烁
             if (mx != last_mx || my != last_my)
             {
                 last_mx = mx;
                 last_my = my;
                 cct_gotoxy(0, 29);
-                cout << "[DEBUG] maction=" << maction << " mx=" << mx << " my=" << my << "      ";
+                cout << "[DEBUG] mx=" << mx << " my=" << my << " btn=" << btn << " evt=" << evt
+                     << "      ";
                 display_mouse_position(mx, my, params);
 
                 int row, col;
@@ -495,15 +502,19 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     cout << "                                  ";
                 }
             }
-            // 点击事件仍然立即处理
-            if (maction != MOUSE_ONLY_MOVED)
+            // 只要有按钮按下就处理为点击
+            if (btn != 0)
             {
                 int row, col;
                 bool is_valid;
                 convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+                cct_gotoxy(0, 28);
+                cout << "[DEBUG] btn=" << btn << " evt=" << evt << " mx=" << mx << " my=" << my
+                     << " row=" << row << " col=" << col << " is_valid=" << is_valid << "      ";
                 if (is_valid)
                 {
-                    mark_cell(matrix, params, row, col, 1);
+                    int markType = (btn & FROM_LEFT_1ST_BUTTON_PRESSED) ? 1 : 2;
+                    mark_cell(matrix, params, row, col, markType);
                     display_game_graphic(matrix, params);
                     cct_setcolor();
                     cct_gotoxy(0, 25);
@@ -516,107 +527,90 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                 }
             }
         }
-        else if (ret == CCT_KEYBOARD_EVENT)
+        else if (ir.EventType == KEY_EVENT)
         {
-            // 键盘事件
-            if (keycode1 == 'q' || keycode1 == 'Q')
+            if (ir.Event.KeyEvent.bKeyDown)
             {
-                game_over = true;
-            }
-            else if (keycode1 == 'z' || keycode1 == 'Z')
-            {
-                // 切换作弊模式
-                params.cheat_mode = !params.cheat_mode;
-
-                // 重绘游戏界面
-                display_game_graphic(matrix, params);
-
-                // 显示操作提示
-                cct_setcolor();
-                cct_gotoxy(0, 25);
-                cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键切换"
-                        "作弊模式"
-                        "作弊模式"
-                     << endl;
-                cct_gotoxy(0, 26);
-                cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
-                cct_gotoxy(0, 27);
-                cout << (params.cheat_mode ? "已开启" : "已关闭") << "作弊模式                   "
-                     << endl;
-                Sleep(500); // 显示一下切换提示
-            }
-            else if (keycode1 == '\r')
-            {
-                // 验证解答
-                int error_row, error_col;
-                if (validate_solution(matrix, params, error_row, error_col))
+                int keycode1 = ir.Event.KeyEvent.uChar.AsciiChar;
+                if (keycode1 == 'q' || keycode1 == 'Q')
                 {
-                    cct_gotoxy(0, 28);
-                    cout << "恭喜！你的解答正确！" << endl;
                     game_over = true;
-                    system("pause");
                 }
-                else
+                else if (keycode1 == 'z' || keycode1 == 'Z')
                 {
-                    cct_gotoxy(0, 28);
-                    cout << "解答错误，第一个错误位置：" << (char)('A' + error_row)
-                         << (error_col + 1) << "      " << endl;
-
-                    // 标记错误位置
-                    int cell_width = params.has_separators ? 5 : 2;
-                    int cell_height = params.has_separators ? 3 : 1;
-                    int hint_width = matrix.hint_width * 2;
-                    int hint_height = matrix.hint_height;
-                    int matrix_x = 5 + hint_width;
-                    int matrix_y = 3 + hint_height;
-
-                    // 闪烁提示错误位置
-                    for (int i = 0; i < 3; i++)
-                    {
-                        int x = matrix_x + error_col * cell_width;
-                        int y = matrix_y + error_row * cell_height;
-
-                        if (params.has_separators)
-                        {
-                            x += 2; // 在单元格中心位置
-                            y += 1;
-                        }
-                        else
-                        {
-                            x += 1;
-                            y += 1;
-                        }
-
-                        cct_gotoxy(x, y);
-                        cct_setcolor(COLOR_BLACK, COLOR_HRED);
-                        cout << "X";
-                        Sleep(300);
-
-                        cct_gotoxy(x, y);
-                        cct_setcolor(COLOR_BLACK, COLOR_WHITE);
-                        cout << " ";
-                        Sleep(300);
-                    }
-
-                    // 恢复显示
+                    params.cheat_mode = !params.cheat_mode;
                     display_game_graphic(matrix, params);
-
-                    // 显示操作提示
                     cct_setcolor();
                     cct_gotoxy(0, 25);
                     cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"
-                            "切换作弊模式"
                             "切换作弊模式"
                          << endl;
                     cct_gotoxy(0, 26);
                     cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式"
                          << endl;
+                    cct_gotoxy(0, 27);
+                    cout << (params.cheat_mode ? "已开启" : "已关闭")
+                         << "作弊模式                   " << endl;
+                    Sleep(500);
+                }
+                else if (keycode1 == '\r')
+                {
+                    int error_row, error_col;
+                    if (validate_solution(matrix, params, error_row, error_col))
+                    {
+                        cct_gotoxy(0, 28);
+                        cout << "恭喜！你的解答正确！" << endl;
+                        game_over = true;
+                        system("pause");
+                    }
+                    else
+                    {
+                        cct_gotoxy(0, 28);
+                        cout << "解答错误，第一个错误位置：" << (char)('A' + error_row)
+                             << (error_col + 1) << "      " << endl;
+                        int cell_width = params.has_separators ? 5 : 2;
+                        int cell_height = params.has_separators ? 3 : 1;
+                        int hint_width = matrix.hint_width * 2;
+                        int hint_height = matrix.hint_height;
+                        int matrix_x = 5 + hint_width;
+                        int matrix_y = 3 + hint_height;
+                        for (int i = 0; i < 3; i++)
+                        {
+                            int x = matrix_x + error_col * cell_width;
+                            int y = matrix_y + error_row * cell_height;
+                            if (params.has_separators)
+                            {
+                                x += 2;
+                                y += 1;
+                            }
+                            else
+                            {
+                                x += 1;
+                                y += 1;
+                            }
+                            cct_gotoxy(x, y);
+                            cct_setcolor(COLOR_BLACK, COLOR_HRED);
+                            cout << "X";
+                            Sleep(300);
+                            cct_gotoxy(x, y);
+                            cct_setcolor(COLOR_BLACK, COLOR_WHITE);
+                            cout << " ";
+                            Sleep(300);
+                        }
+                        display_game_graphic(matrix, params);
+                        cct_setcolor();
+                        cct_gotoxy(0, 25);
+                        cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，"
+                                "Z键切换作弊模式"
+                             << endl;
+                        cct_gotoxy(0, 26);
+                        cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式"
+                             << endl;
+                    }
                 }
             }
         }
     }
-
-    // 禁用鼠标
     cct_disable_mouse();
 }
 
@@ -655,26 +649,30 @@ void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
     cct_gotoxy(0, 25);
     cout << "操作说明：移动鼠标显示坐标，Q键退出" << endl;
 
+    INPUT_RECORD ir;
+    DWORD read;
     while (!quit)
     {
-        int mx, my, maction, keycode1, keycode2;
-        int ret = cct_read_keyboard_and_mouse(mx, my, maction, keycode1, keycode2);
-
-        if (ret == CCT_MOUSE_EVENT)
+        ReadConsoleInput(hInput, &ir, 1, &read);
+        if (ir.EventType == MOUSE_EVENT)
         {
-            // 只有坐标变化时才刷新显示，减少闪烁
+            auto &me = ir.Event.MouseEvent;
+            int mx = me.dwMousePosition.X;
+            int my = me.dwMousePosition.Y;
+            DWORD btn = me.dwButtonState;
+            DWORD evt = me.dwEventFlags;
+
             if (mx != last_mx || my != last_my)
             {
                 last_mx = mx;
                 last_my = my;
                 cct_gotoxy(0, 29);
-                cout << "[DEBUG] maction=" << maction << " mx=" << mx << " my=" << my << "      ";
+                cout << "[DEBUG] mx=" << mx << " my=" << my << " btn=" << btn << " evt=" << evt
+                     << "      ";
                 display_mouse_position(mx, my, params);
-
                 int row, col;
                 bool is_valid;
                 convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
-
                 if (is_valid)
                 {
                     cct_gotoxy(0, 27);
@@ -686,17 +684,31 @@ void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
                     cout << "                                  ";
                 }
             }
-        }
-        else if (ret == CCT_KEYBOARD_EVENT)
-        {
-            if (keycode1 == 'q' || keycode1 == 'Q')
+            // 只要有按钮按下就处理为点击
+            if (btn != 0)
             {
-                quit = true;
+                int row, col;
+                bool is_valid;
+                convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+                if (is_valid)
+                {
+                    cct_gotoxy(0, 28);
+                    cout << "[DEBUG] 检测到点击 btn=" << btn << " evt=" << evt << "      ";
+                }
+            }
+        }
+        else if (ir.EventType == KEY_EVENT)
+        {
+            if (ir.Event.KeyEvent.bKeyDown)
+            {
+                int keycode1 = ir.Event.KeyEvent.uChar.AsciiChar;
+                if (keycode1 == 'q' || keycode1 == 'Q')
+                {
+                    quit = true;
+                }
             }
         }
     }
-
-    // 禁用鼠标
     cct_disable_mouse();
 }
 

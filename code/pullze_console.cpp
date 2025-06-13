@@ -569,13 +569,13 @@ void display_matrix_graphic(const GameMatrix &matrix, const GameParams &params)
                 y = 3 + i * 3 + 1;          // 单元格左上角
             }
 
-            if (params.cheat_mode && matrix.solution[i][j])
+            if (params.cheat_mode && matrix.solution[i][j] && matrix.cells[i][j] == EMPTY)
             {
                 display_cell(x, y, FILLED, params.has_separators);
             }
             else
             {
-                display_cell(x, y, EMPTY, params.has_separators);
+                display_cell(x, y, matrix.cells[i][j], params.has_separators);
             }
         }
     }
@@ -664,13 +664,13 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
                 y = matrix_y + i * 3 + 1;          // 单元格左上角
             }
 
-            if (params.cheat_mode && matrix.solution[i][j])
+            if (params.cheat_mode && matrix.solution[i][j] && matrix.cells[i][j] == EMPTY)
             {
                 display_cell(x, y, FILLED, params.has_separators);
             }
             else
             {
-                display_cell(x, y, EMPTY, params.has_separators);
+                display_cell(x, y, matrix.cells[i][j], params.has_separators);
             }
         }
     }

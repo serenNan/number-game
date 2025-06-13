@@ -1,6 +1,24 @@
 #include "pullze.h"
 #include <Windows.h>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
+
+/***************************************************************************
+  函数名称：print_repeated_char
+  功    能：打印重复的字符
+  输入参数：char ch - 要重复的字符
+            int count - 重复次数
+  返 回 值：无
+  说    明：替代 string(count, ch) 的功能
+***************************************************************************/
+void print_repeated_char(char ch, int count)
+{
+    for (int i = 0; i < count; i++)
+    {
+        cout << ch;
+    }
+}
 
 /***************************************************************************
   函数名称：show_menu
@@ -80,11 +98,11 @@ int show_menu()
 /***************************************************************************
   函数名称：get_game_params
   功    能：获取游戏参数
-  输入参数：GameParams& params - 游戏参数
+  输入参数：无
   返 回 值：bool - 是否成功获取参数
   说    明：获取用户输入的游戏参数
 ***************************************************************************/
-bool get_game_params(GameParams &params)
+bool get_game_params()
 {
     cct_cls();
     int choice = 0;
@@ -111,13 +129,13 @@ bool get_game_params(GameParams &params)
     switch (choice)
     {
     case 1:
-        params.rows = params.cols = 5;
+        g_rows = g_cols = 5;
         break;
     case 2:
-        params.rows = params.cols = 10;
+        g_rows = g_cols = 10;
         break;
     case 3:
-        params.rows = params.cols = 15;
+        g_rows = g_cols = 15;
         break;
     }
 
@@ -127,17 +145,16 @@ bool get_game_params(GameParams &params)
 /***************************************************************************
   函数名称：play_game_text_mode
   功    能：文本模式下的游戏主循环
-  输入参数：GameMatrix& matrix - 游戏矩阵
-            GameParams& params - 游戏参数
+  输入参数：无
   返 回 值：无
   说    明：文本模式下的完整游戏流程
 ***************************************************************************/
-void play_game_text_mode(GameMatrix &matrix, GameParams &params)
+void play_game_text_mode()
 {
     bool game_over = false;
 
     // 默认关闭作弊模式
-    params.cheat_mode = false;
+    g_cheat_mode = false;
 
     while (!game_over)
     {
@@ -148,11 +165,11 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
 
         // 计算行提示的最大数量
         int max_row_hints = 0;
-        for (int i = 0; i < params.rows; i++)
+        for (int i = 0; i < g_rows; i++)
         {
-            if (matrix.row_hint_count[i] > max_row_hints)
+            if (g_row_hint_count[i] > max_row_hints)
             {
-                max_row_hints = matrix.row_hint_count[i];
+                max_row_hints = g_row_hint_count[i];
             }
         }
 
@@ -160,29 +177,31 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         int hint_width = max_row_hints * 2;
 
         // 显示顶部边框
-        cout << string(hint_width + 1, '-') << "+-----------+-----------+" << endl;
+        print_repeated_char('-', hint_width + 1);
+        cout << "+-----------+-----------+" << endl;
 
         // 计算列提示的最大高度
         int max_col_hints = 0;
-        for (int j = 0; j < params.cols; j++)
+        for (int j = 0; j < g_cols; j++)
         {
-            if (matrix.col_hint_count[j] > max_col_hints)
+            if (g_col_hint_count[j] > max_col_hints)
             {
-                max_col_hints = matrix.col_hint_count[j];
+                max_col_hints = g_col_hint_count[j];
             }
         }
 
         // 显示列提示（从上往下）
         for (int h = 0; h < max_col_hints; h++)
         {
-            cout << string(hint_width + 1, ' ') << "|";
+            print_repeated_char(' ', hint_width + 1);
+            cout << "|";
 
             // 第一组5列
             for (int j = 0; j < 5; j++)
             {
-                if (j < params.cols && h < matrix.col_hint_count[j])
+                if (j < g_cols && h < g_col_hint_count[j])
                 {
-                    cout << " " << matrix.col_hints[j][h];
+                    cout << " " << g_col_hints[j][h];
                 }
                 else
                 {
@@ -195,9 +214,9 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
             // 第二组5列
             for (int j = 5; j < 10; j++)
             {
-                if (j < params.cols && h < matrix.col_hint_count[j])
+                if (j < g_cols && h < g_col_hint_count[j])
                 {
-                    cout << " " << matrix.col_hints[j][h];
+                    cout << " " << g_col_hints[j][h];
                 }
                 else
                 {
@@ -209,15 +228,17 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         }
 
         // 显示分隔线
-        cout << string(hint_width + 1, '-') << "+-----------+-----------+" << endl;
+        print_repeated_char('-', hint_width + 1);
+        cout << "+-----------+-----------+" << endl;
 
         // 显示列标题
-        cout << string(hint_width + 1, ' ') << "|";
+        print_repeated_char(' ', hint_width + 1);
+        cout << "|";
 
         // 第一组5列
         for (int j = 0; j < 5; j++)
         {
-            if (j < params.cols)
+            if (j < g_cols)
             {
                 cout << " " << (char)('a' + j);
             }
@@ -232,7 +253,7 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         // 第二组5列
         for (int j = 5; j < 10; j++)
         {
-            if (j < params.cols)
+            if (j < g_cols)
             {
                 cout << " " << (char)('a' + j);
             }
@@ -252,17 +273,27 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         cout << "---+-+-----------+-----------+" << endl;
 
         // 显示矩阵内容和行提示
-        for (int i = 0; i < params.rows; i++)
+        for (int i = 0; i < g_rows; i++)
         {
             // 显示行提示，右对齐
-            string row_hint_str = "";
-            for (int h = 0; h < matrix.row_hint_count[i]; h++)
+            char row_hint_str[MAX_STR_LEN] = "";
+            int pos = 0;
+            for (int h = 0; h < g_row_hint_count[i]; h++)
             {
-                row_hint_str += to_string(matrix.row_hints[i][h]) + " ";
+                // 将数字转换为字符串并添加到row_hint_str
+                char num_str[10];
+                sprintf(num_str, "%d ", g_row_hints[i][h]);
+                strcat(row_hint_str, num_str);
             }
 
             // 确保行提示区域宽度一致
-            cout << setw(hint_width) << right << row_hint_str << " |";
+            int hint_len = strlen(row_hint_str);
+            int spaces = hint_width - hint_len;
+            if (spaces > 0)
+            {
+                print_repeated_char(' ', spaces);
+            }
+            cout << row_hint_str << " |";
 
             // 显示行标题（A,B,C,...）
             cout << (char)('A' + i) << "|";
@@ -270,30 +301,30 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
             // 第一组5列
             for (int j = 0; j < 5; j++)
             {
-                if (j < params.cols)
+                if (j < g_cols)
                 {
-                    if (matrix.cells[i][j] == EMPTY)
+                    if (g_cells[i][j] == EMPTY)
                     {
-                        if (params.cheat_mode && matrix.solution[i][j])
+                        if (g_cheat_mode && g_solution[i][j])
                         {
                             cout << " O"; // 作弊模式显示普通的O
                         }
                         else
                             cout << "  ";
                     }
-                    else if (matrix.cells[i][j] == MARKED)
+                    else if (g_cells[i][j] == MARKED)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_HGREEN); // 用户标记为绿色高亮
                         cout << " O";
                         cct_setcolor(); // 恢复默认颜色
                     }
-                    else if (matrix.cells[i][j] == MARKED_WRONG)
+                    else if (g_cells[i][j] == MARKED_WRONG)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_HRED); // 错误标记为红色高亮
                         cout << " X";
                         cct_setcolor(); // 恢复默认颜色
                     }
-                    else if (matrix.cells[i][j] == MARKED_NOT)
+                    else if (g_cells[i][j] == MARKED_NOT)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_HBLUE); // 标记为不存在为蓝色高亮
                         cout << " ·";
@@ -311,30 +342,30 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
             // 第二组5列
             for (int j = 5; j < 10; j++)
             {
-                if (j < params.cols)
+                if (j < g_cols)
                 {
-                    if (matrix.cells[i][j] == EMPTY)
+                    if (g_cells[i][j] == EMPTY)
                     {
-                        if (params.cheat_mode && matrix.solution[i][j])
+                        if (g_cheat_mode && g_solution[i][j])
                         {
                             cout << " O"; // 作弊模式显示普通的O
                         }
                         else
                             cout << "  ";
                     }
-                    else if (matrix.cells[i][j] == MARKED)
+                    else if (g_cells[i][j] == MARKED)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_HGREEN); // 用户标记为绿色高亮
                         cout << " O";
                         cct_setcolor(); // 恢复默认颜色
                     }
-                    else if (matrix.cells[i][j] == MARKED_WRONG)
+                    else if (g_cells[i][j] == MARKED_WRONG)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_HRED); // 错误标记为红色高亮
                         cout << " X";
                         cct_setcolor(); // 恢复默认颜色
                     }
-                    else if (matrix.cells[i][j] == MARKED_NOT)
+                    else if (g_cells[i][j] == MARKED_NOT)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_HBLUE); // 标记为不存在为蓝色高亮
                         cout << " ·";
@@ -350,7 +381,7 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
             cout << " |" << endl;
 
             // 每5行添加一个分隔线
-            if ((i + 1) % 5 == 0 && i < params.rows - 1)
+            if ((i + 1) % 5 == 0 && i < g_rows - 1)
             {
                 for (int k = 0; k < hint_width - 1; k++)
                 {
@@ -368,7 +399,7 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         cout << "---+-+-----------+-----------+" << endl;
 
         // 显示当前作弊模式状态
-        cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
+        cout << "当前" << (g_cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
 
         // 用户输入
         cout << "\n命令形式：Aa=等价于图形游戏中鼠标左键选择Aa位(区分大小写)" << endl;
@@ -389,15 +420,15 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         {
             // 验证解答
             int error_row, error_col;
-            if (validate_solution(matrix, params, error_row, error_col))
+            if (validate_solution(error_row, error_col))
             {
                 cout << "恭喜！你的解答正确！" << endl;
                 game_over = true;
-                system("pause");
             }
             else
             {
-                cout << "解答错误，第一个错误位置：" << (char)('A' + error_row)
+                // 显示错误位置
+                cout << "解答错误！第一个错误位置在：" << (char)('A' + error_row)
                      << (char)('a' + error_col) << endl;
                 system("pause");
             }
@@ -405,22 +436,22 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         else if ((input[0] == 'Z' || input[0] == 'z') && input[1] == '\0')
         {
             // 切换作弊模式
-            params.cheat_mode = !params.cheat_mode;
-            cout << (params.cheat_mode ? "已开启" : "已关闭") << "作弊模式" << endl;
+            g_cheat_mode = !g_cheat_mode;
+            cout << (g_cheat_mode ? "已开启" : "已关闭") << "作弊模式" << endl;
             system("pause");
         }
-        else if (input[0] >= 'A' && input[0] <= 'A' + params.rows - 1 && input[1] >= 'a' &&
-                 input[1] <= 'a' + params.cols - 1)
+        else if (input[0] >= 'A' && input[0] <= 'A' + g_rows - 1 && input[1] >= 'a' &&
+                 input[1] <= 'a' + g_cols - 1)
         {
             // 解析坐标
             int row = input[0] - 'A';
             int col = input[1] - 'a';
 
             // 检查坐标有效性
-            if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)
+            if (row >= 0 && row < g_rows && col >= 0 && col < g_cols)
             {
                 // 标记或取消标记
-                mark_cell(matrix, params, row, col, 1);
+                mark_cell(row, col, 1);
             }
         }
     }
@@ -434,7 +465,7 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
   返 回 值：无
   说    明：图形模式下的完整游戏流程
 ***************************************************************************/
-void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
+void play_game_graphic_mode()
 {
     // 兼容Win11，确保鼠标事件能被捕获
     HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
@@ -448,13 +479,13 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
     int last_mx = -1, last_my = -1;
 
     // 默认关闭作弊模式
-    params.cheat_mode = false;
+    g_cheat_mode = false;
 
     // 启用鼠标
     cct_enable_mouse();
 
     // 绘制初始游戏界面
-    display_game_graphic(matrix, params);
+    display_game_graphic();
 
     // 显示操作提示
     cct_setcolor();
@@ -462,7 +493,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
     cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键切换作弊模式"
          << endl;
     cct_gotoxy(0, 26);
-    cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
+    cout << "当前" << (g_cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
 
     INPUT_RECORD ir;
     DWORD read;
@@ -485,11 +516,11 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                 cct_gotoxy(0, 29);
                 cout << "[DEBUG] mx=" << mx << " my=" << my << " btn=" << btn << " evt=" << evt
                      << "      ";
-                display_mouse_position(mx, my, params);
+                display_mouse_position(mx, my);
 
                 int row, col;
                 bool is_valid;
-                convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+                convert_mouse_to_cell(mx, my, row, col, is_valid);
 
                 if (is_valid)
                 {
@@ -507,7 +538,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
             {
                 int row, col;
                 bool is_valid;
-                convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+                convert_mouse_to_cell(mx, my, row, col, is_valid);
                 cct_gotoxy(0, 28);
                 cout << "[DEBUG] btn=" << btn << " evt=" << evt << " mx=" << mx << " my=" << my
                      << " row=" << row << " col=" << col << " is_valid=" << is_valid << "      ";
@@ -515,15 +546,15 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                 {
                     int markType = (btn & FROM_LEFT_1ST_BUTTON_PRESSED) ? 1 : 2;
                     // 高亮显示点击位置（背景高亮，内容为空格）
-                    int cell_width = params.has_separators ? 5 : 2;
-                    int cell_height = params.has_separators ? 3 : 1;
-                    int hint_width = matrix.hint_width * 2;
-                    int hint_height = matrix.hint_height;
+                    int cell_width = g_has_separators ? 5 : 2;
+                    int cell_height = g_has_separators ? 3 : 1;
+                    int hint_width = g_hint_width * 2;
+                    int hint_height = g_hint_height;
                     int matrix_x = 5 + hint_width;
                     int matrix_y = 3 + hint_height;
                     int x = matrix_x + col * cell_width;
                     int y = matrix_y + row * cell_height;
-                    if (params.has_separators)
+                    if (g_has_separators)
                     {
                         x += 2;
                         y += 1;
@@ -553,28 +584,28 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     Sleep(120);
 
                     // 修改：左键标记，右键直接清空
-                    if (markType == 1 && matrix.cells[row][col] == MARKED)
+                    if (markType == 1 && g_cells[row][col] == MARKED)
                     {
                         // 已经标记为O，不做任何操作
                     }
                     else if (markType == 1)
                     {
-                        mark_cell(matrix, params, row, col, 1);
+                        mark_cell(row, col, 1);
                     }
                     else if (markType == 2)
                     {
-                        matrix.cells[row][col] = EMPTY;
+                        g_cells[row][col] = EMPTY;
                     }
 
                     // 只刷新当前单元格显示，区分作弊模式和普通模式O的颜色
                     cct_gotoxy(x, y);
-                    if (matrix.cells[row][col] == MARKED && !params.cheat_mode)
+                    if (g_cells[row][col] == MARKED && !g_cheat_mode)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_HGREEN);
                         cout << "O";
                         cct_setcolor();
                     }
-                    else if (matrix.cells[row][col] == MARKED && params.cheat_mode)
+                    else if (g_cells[row][col] == MARKED && g_cheat_mode)
                     {
                         cct_setcolor(COLOR_BLACK, COLOR_WHITE);
                         cout << "O";
@@ -593,8 +624,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                             "切换作弊模式"
                          << endl;
                     cct_gotoxy(0, 26);
-                    cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式"
-                         << endl;
+                    cout << "当前" << (g_cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
                 }
             }
         }
@@ -609,25 +639,24 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                 }
                 else if (keycode1 == 'z' || keycode1 == 'Z')
                 {
-                    params.cheat_mode = !params.cheat_mode;
-                    display_game_graphic(matrix, params);
+                    g_cheat_mode = !g_cheat_mode;
+                    display_game_graphic();
                     cct_setcolor();
                     cct_gotoxy(0, 25);
                     cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"
                             "切换作弊模式"
                          << endl;
                     cct_gotoxy(0, 26);
-                    cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式"
-                         << endl;
+                    cout << "当前" << (g_cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
                     cct_gotoxy(0, 27);
-                    cout << (params.cheat_mode ? "已开启" : "已关闭")
-                         << "作弊模式                   " << endl;
+                    cout << (g_cheat_mode ? "已开启" : "已关闭") << "作弊模式                   "
+                         << endl;
                     Sleep(500);
                 }
                 else if (keycode1 == '\r')
                 {
                     int error_row, error_col;
-                    if (validate_solution(matrix, params, error_row, error_col))
+                    if (validate_solution(error_row, error_col))
                     {
                         cct_gotoxy(0, 28);
                         cout << "恭喜！你的解答正确！" << endl;
@@ -639,17 +668,17 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                         cct_gotoxy(0, 28);
                         cout << "解答错误，第一个错误位置：" << (char)('A' + error_row)
                              << (error_col + 1) << "      " << endl;
-                        int cell_width = params.has_separators ? 5 : 2;
-                        int cell_height = params.has_separators ? 3 : 1;
-                        int hint_width = matrix.hint_width * 2;
-                        int hint_height = matrix.hint_height;
+                        int cell_width = g_has_separators ? 5 : 2;
+                        int cell_height = g_has_separators ? 3 : 1;
+                        int hint_width = g_hint_width * 2;
+                        int hint_height = g_hint_height;
                         int matrix_x = 5 + hint_width;
                         int matrix_y = 3 + hint_height;
                         for (int i = 0; i < 3; i++)
                         {
                             int x = matrix_x + error_col * cell_width;
                             int y = matrix_y + error_row * cell_height;
-                            if (params.has_separators)
+                            if (g_has_separators)
                             {
                                 x += 2;
                                 y += 1;
@@ -668,14 +697,14 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                             cout << " ";
                             Sleep(300);
                         }
-                        display_game_graphic(matrix, params);
+                        display_game_graphic();
                         cct_setcolor();
                         cct_gotoxy(0, 25);
                         cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，"
                                 "Z键切换作弊模式"
                              << endl;
                         cct_gotoxy(0, 26);
-                        cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式"
+                        cout << "当前" << (g_cheat_mode ? "已开启" : "未开启") << "作弊模式"
                              << endl;
                     }
                 }
@@ -693,7 +722,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
   返 回 值：无
   说    明：F选项专用，只显示鼠标位置，不进行游戏
 ***************************************************************************/
-void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
+void show_mouse_position_mode()
 {
     // 兼容Win11，确保鼠标事件能被捕获
     HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
@@ -707,13 +736,13 @@ void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
     int last_mx = -1, last_my = -1;
 
     // 默认开启作弊模式以显示解答
-    params.cheat_mode = true;
+    g_cheat_mode = true;
 
     // 启用鼠标
     cct_enable_mouse();
 
     // 绘制初始游戏界面
-    display_game_graphic(matrix, params);
+    display_game_graphic();
 
     // 显示操作提示
     cct_setcolor();
@@ -740,10 +769,10 @@ void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
                 cct_gotoxy(0, 29);
                 cout << "[DEBUG] mx=" << mx << " my=" << my << " btn=" << btn << " evt=" << evt
                      << "      ";
-                display_mouse_position(mx, my, params);
+                display_mouse_position(mx, my);
                 int row, col;
                 bool is_valid;
-                convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+                convert_mouse_to_cell(mx, my, row, col, is_valid);
                 if (is_valid)
                 {
                     cct_gotoxy(0, 27);
@@ -760,7 +789,7 @@ void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
             {
                 int row, col;
                 bool is_valid;
-                convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+                convert_mouse_to_cell(mx, my, row, col, is_valid);
                 if (is_valid)
                 {
                     cct_gotoxy(0, 28);

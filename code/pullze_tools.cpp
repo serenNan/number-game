@@ -1,5 +1,6 @@
 #include "pullze.h"
 #include <Windows.h>
+#include <iostream>
 
 /***************************************************************************
   函数名称：show_menu
@@ -444,6 +445,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
     SetConsoleMode(hInput, mode);
 
     bool game_over = false;
+    int last_mx = -1, last_my = -1;
 
     // 默认关闭作弊模式
     params.cheat_mode = false;
@@ -469,45 +471,40 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
 
         if (ret == CCT_MOUSE_EVENT)
         {
-            // 鼠标事件
-            display_mouse_position(mx, my, params);
-
-            // 处理鼠标坐标显示（包括移动事件）
-            int row, col;
-            bool is_valid;
-            convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
-
-            if (is_valid)
+            // 只有坐标变化时才刷新显示，减少闪烁
+            if (mx != last_mx || my != last_my)
             {
-                // 显示当前单元格坐标
-                cct_gotoxy(0, 27);
-                cout << "当前单元格: " << (char)('A' + row) << (col + 1) << "                ";
-            }
-            else
-            {
-                // 清除单元格坐标显示
-                cct_gotoxy(0, 27);
-                cout << "                                  ";
-            }
+                last_mx = mx;
+                last_my = my;
+                cct_gotoxy(0, 29);
+                cout << "[DEBUG] maction=" << maction << " mx=" << mx << " my=" << my << "      ";
+                display_mouse_position(mx, my, params);
 
-            if (maction == MOUSE_LEFT_BUTTON_CLICK || maction == MOUSE_RIGHT_BUTTON_CLICK)
-            {
+                int row, col;
+                bool is_valid;
+                convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+
                 if (is_valid)
                 {
-                    // 根据左右键不同的标记方式
-                    if (maction == MOUSE_LEFT_BUTTON_CLICK)
-                    {
-                        mark_cell(matrix, params, row, col, 1);
-                    }
-                    else if (maction == MOUSE_RIGHT_BUTTON_CLICK)
-                    {
-                        mark_cell(matrix, params, row, col, 2);
-                    }
-
-                    // 重绘游戏界面
+                    cct_gotoxy(0, 27);
+                    cout << "当前单元格: " << (char)('A' + row) << (col + 1) << "                ";
+                }
+                else
+                {
+                    cct_gotoxy(0, 27);
+                    cout << "                                  ";
+                }
+            }
+            // 点击事件仍然立即处理
+            if (maction != MOUSE_ONLY_MOVED)
+            {
+                int row, col;
+                bool is_valid;
+                convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+                if (is_valid)
+                {
+                    mark_cell(matrix, params, row, col, 1);
                     display_game_graphic(matrix, params);
-
-                    // 显示操作提示
                     cct_setcolor();
                     cct_gotoxy(0, 25);
                     cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"
@@ -538,6 +535,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                 cct_setcolor();
                 cct_gotoxy(0, 25);
                 cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键切换"
+                        "作弊模式"
                         "作弊模式"
                      << endl;
                 cct_gotoxy(0, 26);
@@ -608,6 +606,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     cct_gotoxy(0, 25);
                     cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"
                             "切换作弊模式"
+                            "切换作弊模式"
                          << endl;
                     cct_gotoxy(0, 26);
                     cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式"
@@ -640,6 +639,7 @@ void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
     SetConsoleMode(hInput, mode);
 
     bool quit = false;
+    int last_mx = -1, last_my = -1;
 
     // 默认开启作弊模式以显示解答
     params.cheat_mode = true;
@@ -662,30 +662,33 @@ void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
 
         if (ret == CCT_MOUSE_EVENT)
         {
-            // 鼠标事件
-            display_mouse_position(mx, my, params);
-
-            // 处理鼠标坐标显示（包括移动事件）
-            int row, col;
-            bool is_valid;
-            convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
-
-            if (is_valid)
+            // 只有坐标变化时才刷新显示，减少闪烁
+            if (mx != last_mx || my != last_my)
             {
-                // 显示当前单元格坐标
-                cct_gotoxy(0, 27);
-                cout << "当前单元格: " << (char)('A' + row) << (col + 1) << "                ";
-            }
-            else
-            {
-                // 清除单元格坐标显示
-                cct_gotoxy(0, 27);
-                cout << "                                  ";
+                last_mx = mx;
+                last_my = my;
+                cct_gotoxy(0, 29);
+                cout << "[DEBUG] maction=" << maction << " mx=" << mx << " my=" << my << "      ";
+                display_mouse_position(mx, my, params);
+
+                int row, col;
+                bool is_valid;
+                convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+
+                if (is_valid)
+                {
+                    cct_gotoxy(0, 27);
+                    cout << "当前单元格: " << (char)('A' + row) << (col + 1) << "                ";
+                }
+                else
+                {
+                    cct_gotoxy(0, 27);
+                    cout << "                                  ";
+                }
             }
         }
         else if (ret == CCT_KEYBOARD_EVENT)
         {
-            // 键盘事件
             if (keycode1 == 'q' || keycode1 == 'Q')
             {
                 quit = true;
@@ -695,4 +698,37 @@ void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
 
     // 禁用鼠标
     cct_disable_mouse();
+}
+
+void debug_raw_mouse_event()
+{
+    HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode = 0;
+    GetConsoleMode(hInput, &mode);
+    mode &= ~ENABLE_QUICK_EDIT_MODE;
+    mode |= ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS;
+    SetConsoleMode(hInput, mode);
+
+    std::cout << "请在窗口内移动、点击鼠标，按ESC退出\n";
+    INPUT_RECORD ir;
+    DWORD read;
+    while (true)
+    {
+        ReadConsoleInput(hInput, &ir, 1, &read);
+        if (ir.EventType == MOUSE_EVENT)
+        {
+            auto &me = ir.Event.MouseEvent;
+            std::cout << "X=" << me.dwMousePosition.X << " Y=" << me.dwMousePosition.Y
+                      << " ButtonState=" << me.dwButtonState << " EventFlags=" << me.dwEventFlags
+                      << std::endl;
+        }
+        else if (ir.EventType == KEY_EVENT)
+        {
+            if (ir.Event.KeyEvent.bKeyDown && ir.Event.KeyEvent.wVirtualKeyCode == VK_ESCAPE)
+            {
+                std::cout << "ESC退出\n";
+                break;
+            }
+        }
+    }
 }

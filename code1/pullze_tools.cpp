@@ -514,43 +514,6 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                 if (is_valid)
                 {
                     int markType = (btn & FROM_LEFT_1ST_BUTTON_PRESSED) ? 1 : 2;
-                    // 高亮显示点击位置（背景高亮，内容为空格）
-                    int cell_width = params.has_separators ? 5 : 2;
-                    int cell_height = params.has_separators ? 3 : 1;
-                    int hint_width = matrix.hint_width * 2;
-                    int hint_height = matrix.hint_height;
-                    int matrix_x = 5 + hint_width;
-                    int matrix_y = 3 + hint_height;
-                    int x = matrix_x + col * cell_width;
-                    int y = matrix_y + row * cell_height;
-                    if (params.has_separators)
-                    {
-                        x += 2;
-                        y += 1;
-                    }
-                    else
-                    {
-                        x += 1;
-                        y += 1;
-                    }
-                    cct_gotoxy(x, y);
-                    if (btn & FROM_LEFT_1ST_BUTTON_PRESSED)
-                    {
-                        cct_setcolor(COLOR_HGREEN, COLOR_BLACK);
-                        cout << " ";
-                    }
-                    else if (btn & RIGHTMOST_BUTTON_PRESSED)
-                    {
-                        cct_setcolor(COLOR_HRED, COLOR_BLACK);
-                        cout << " ";
-                    }
-                    else
-                    {
-                        cct_setcolor(COLOR_HYELLOW, COLOR_BLACK);
-                        cout << " ";
-                    }
-                    cct_setcolor();
-                    Sleep(120);
 
                     // 修改：左键标记为O，右键只消除左键做的标记
                     if (markType == 1) // 左键点击

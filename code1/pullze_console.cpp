@@ -369,32 +369,32 @@ void display_cell(int x, int y, CellStatus status, bool has_separators)
         cct_setcolor(COLOR_HRED, COLOR_BLACK);
         cct_showstr(screen_x, screen_y, "X", COLOR_HRED, COLOR_BLACK);
         break;
-        
+
     // 以下是作弊模式下的新增显示状态
     case CHEAT_EMPTY:
         // 灰色背景O：有球但尚未选择
         cct_setcolor(COLOR_HBLACK, COLOR_BLACK);
         cct_showstr(screen_x, screen_y, "O", COLOR_HBLACK, COLOR_BLACK);
         break;
-        
+
     case CHEAT_MARKED:
         // 蓝色背景O：有球且已左键选择
         cct_setcolor(COLOR_HBLUE, COLOR_BLACK);
         cct_showstr(screen_x, screen_y, "O", COLOR_HBLUE, COLOR_BLACK);
         break;
-        
+
     case CHEAT_WRONG:
         // 红色背景O：无球但已左键选择
         cct_setcolor(COLOR_HRED, COLOR_BLACK);
         cct_showstr(screen_x, screen_y, "O", COLOR_HRED, COLOR_BLACK);
         break;
-        
+
     case CHEAT_NOT_RIGHT:
         // 红色背景X：无球且右键标注
         cct_setcolor(COLOR_HRED, COLOR_BLACK);
         cct_showstr(screen_x, screen_y, "X", COLOR_HRED, COLOR_BLACK);
         break;
-        
+
     case CHEAT_BALL_RIGHT:
         // 蓝色背景X：有球但已右键标注
         cct_setcolor(COLOR_HBLUE, COLOR_BLACK);
@@ -782,7 +782,15 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
 void display_mouse_position(int mx, int my, const GameParams &params)
 {
     cct_setcolor();
-    cct_gotoxy(0, 30);
+
+    // 计算矩阵大小和位置
+    int cell_width = params.has_separators ? 5 : 2;  // 有分隔线时每个单元格占5列，否则占2列
+    int cell_height = params.has_separators ? 3 : 1; // 有分隔线时每个单元格占3行，否则占1行
+
+    // 计算表格底部位置，确保坐标提示显示在表格下方
+    int bottom_y = 3 + (params.has_separators ? params.rows * 3 + 1 : params.rows + 2) + 5;
+
+    cct_gotoxy(0, bottom_y);
     cout << "鼠标坐标: X=" << setw(3) << mx << ", Y=" << setw(3) << my << "        ";
 }
 

@@ -767,6 +767,7 @@ void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
 ***************************************************************************/
 void display_mouse_position(int mx, int my, const GameParams &params)
 {
+    // 设置默认颜色
     cct_setcolor();
 
     // 计算矩阵大小和位置
@@ -774,10 +775,37 @@ void display_mouse_position(int mx, int my, const GameParams &params)
     int cell_height = params.has_separators ? 3 : 1; // 有分隔线时每个单元格占3行，否则占1行
 
     // 计算表格底部位置，确保坐标提示显示在表格下方
-    int bottom_y = 3 + (params.has_separators ? params.rows * 3 + 1 : params.rows + 2) + 5;
+    int hint_height = 3; // 假设提示区高度
+    int matrix_height = params.has_separators ? params.rows * 3 + 1 : params.rows + 2;
+    int bottom_y = 3 + hint_height + matrix_height + 2;
 
+    // 移动到状态栏位置
     cct_gotoxy(0, bottom_y);
-    cout << "鼠标坐标: X=" << setw(3) << mx << ", Y=" << setw(3) << my << "        ";
+
+    // 显示鼠标坐标信息
+    cout << "鼠标位置: X=" << setw(3) << mx << ", Y=" << setw(3) << my;
+
+    // 尝试转换为矩阵坐标
+    int row, col;
+    bool is_valid;
+    GameMatrix dummy_matrix; // 创建一个临时矩阵用于坐标转换
+    dummy_matrix.hint_width = 3;
+    dummy_matrix.hint_height = 3;
+
+    convert_mouse_to_cell(mx, my, row, col, params, dummy_matrix, is_valid);
+
+    // 显示矩阵坐标（如果有效）
+    if (is_valid)
+    {
+        cout << " | 矩阵坐标: 行=" << (char)('A' + row) << ", 列=" << (char)('a' + col);
+    }
+    else
+    {
+        cout << " | 矩阵坐标: 无效位置                ";
+    }
+
+    // 清除行尾可能的残留字符
+    cout << "                    ";
 }
 
 /***************************************************************************
@@ -806,36 +834,53 @@ void convert_mouse_to_cell(int mx, int my, int &row, int &col, const GameParams 
 
     int matrix_x = 5 + hint_width;
     int matrix_y = 3 + hint_height;
+    int matrix_width = params.cols * cell_width + 1;
+    int matrix_height = params.rows * cell_height + 1;
+
+    // 初始化为无效值
+    row = -1;
+    col = -1;
+    is_valid = false;
 
     // 检查鼠标是否在矩阵区域内
+    if (mx < matrix_x || mx >= matrix_x + matrix_width || my < matrix_y ||
+        my >= matrix_y + matrix_height)
+    {
+        return; // 鼠标不在矩阵区域内
+    }
+
+    // 计算行列索引
     if (params.has_separators)
     {
-        if (mx >= matrix_x && mx < matrix_x + params.cols * cell_width + 1 && my >= matrix_y &&
-            my < matrix_y + params.rows * cell_height + 1)
+        // 有分隔线模式
+        // 排除边框线和分隔线的点击
+        int rel_x = mx - matrix_x;
+        int rel_y = my - matrix_y;
+
+        // 检查是否点击在边框或分隔线上
+        if (rel_x % cell_width == 0 || rel_y % cell_height == 0)
         {
-            col = (mx - matrix_x) / cell_width;
-            row = (my - matrix_y) / cell_height;
-            if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)
-            {
-                is_valid = true;
-                return;
-            }
+            return; // 点击在边框或分隔线上，无效
         }
+
+        col = rel_x / cell_width;
+        row = rel_y / cell_height;
     }
     else
     {
-        // 无分隔线模式下，内容显示时有+1偏移，坐标也要修正
+        // 无分隔线模式
+        // 矩阵内容区域从(matrix_x+1, matrix_y+1)开始
         if (mx >= matrix_x + 1 && mx < matrix_x + 1 + params.cols * cell_width &&
-            my >= matrix_y + 1 && my < matrix_y + 1 + params.rows * cell_height)
+            my >= matrix_y + 1 && my < matrix_y + 1 + params.rows)
         {
             col = (mx - matrix_x - 1) / cell_width;
-            row = (my - matrix_y - 1) / cell_height;
-            if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)
-            {
-                is_valid = true;
-                return;
-            }
+            row = my - matrix_y - 1;
         }
     }
-    is_valid = false;
+
+    // 验证计算出的行列是否有效
+    if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)
+    {
+        is_valid = true;
+    }
 }

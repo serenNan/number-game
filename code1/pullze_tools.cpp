@@ -139,290 +139,335 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
     // 默认关闭作弊模式
     params.cheat_mode = false;
 
+    // 用于显示用户标记的临时数组
+    int marked[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE] = {0};
+
     while (!game_over)
     {
         // 显示游戏界面
         cct_cls();
 
-        cout << "初始数组：" << endl;
+        cout << "游戏进行中..." << endl;
 
-        // 计算行提示的最大数量
-        int max_row_hints = 0;
+        // 计算行提示栏最大宽度
+        int maxRowHintWidth = 0;
+        char tempStr[MAX_MATRIX_SIZE * 4] = "";
         for (int i = 0; i < params.rows; i++)
         {
-            if (matrix.row_hint_count[i] > max_row_hints)
+            string hint_str = "";
+            for (int h = 0; h < matrix.row_hint_count[i]; h++)
             {
-                max_row_hints = matrix.row_hint_count[i];
+                if (h > 0)
+                    hint_str += " ";
+                hint_str += to_string(matrix.row_hints[i][h]);
             }
+            maxRowHintWidth = max(maxRowHintWidth, (int)hint_str.length());
         }
 
-        // 计算每个行提示占用的宽度，每个数字2个字符（数字+空格）
-        int hint_width = max_row_hints * 2;
-
-        // 显示顶部边框
-        cout << string(hint_width + 1, '-') << "+-----------+-----------+" << endl;
-
-        // 计算列提示的最大高度
-        int max_col_hints = 0;
+        // 计算列提示栏最大高度
+        int maxColHintHeight = 0;
         for (int j = 0; j < params.cols; j++)
         {
-            if (matrix.col_hint_count[j] > max_col_hints)
-            {
-                max_col_hints = matrix.col_hint_count[j];
-            }
+            maxColHintHeight = max(maxColHintHeight, matrix.col_hint_count[j]);
         }
 
-        // 显示列提示（从上往下）
-        for (int h = 0; h < max_col_hints; h++)
+        // 打印顶部边框
+        for (int i = 0; i < maxRowHintWidth + 2; ++i)
         {
-            cout << string(hint_width + 1, ' ') << "|";
+            cout << '-';
+        }
+        cout << "--+"; // 数据区起始边框
+        for (int j = 0; j < params.cols; j++)
+        {
+            if (j > 0 && j % 5 == 0)
+                cout << "-+"; // 每5列分隔线
+            cout << "--";     // 横线
+        }
+        cout << "-+" << endl; // 右侧结束边框
 
-            // 第一组5列
-            for (int j = 0; j < 5; j++)
+        // 打印列提示栏（下对齐）
+        for (int h = 0; h < maxColHintHeight; h++)
+        {
+            // 行提示栏区域留白
+            cout << setw(maxRowHintWidth + 5) << "  |";
+
+            // 打印列提示（下对齐）
+            for (int j = 0; j < params.cols; j++)
             {
-                if (j < params.cols && h < matrix.col_hint_count[j])
+                if (j > 0 && j % 5 == 0)
+                    cout << " |"; // 每5列分隔线
+                int index = matrix.col_hint_count[j] - maxColHintHeight + h;
+                if (index >= 0 && index < matrix.col_hint_count[j])
                 {
-                    cout << " " << matrix.col_hints[j][h];
+                    cout << setw(2) << matrix.col_hints[j][index];
                 }
                 else
                 {
                     cout << "  ";
                 }
             }
-
-            cout << " |";
-
-            // 第二组5列
-            for (int j = 5; j < 10; j++)
-            {
-                if (j < params.cols && h < matrix.col_hint_count[j])
-                {
-                    cout << " " << matrix.col_hints[j][h];
-                }
-                else
-                {
-                    cout << "  ";
-                }
-            }
-
             cout << " |" << endl;
         }
 
-        // 显示分隔线
-        cout << string(hint_width + 1, '-') << "+-----------+-----------+" << endl;
-
-        // 显示列标题
-        cout << string(hint_width + 1, ' ') << "|";
-
-        // 第一组5列
-        for (int j = 0; j < 5; j++)
+        // 打印网格顶部边框
+        for (int i = 0; i < maxRowHintWidth + 2; ++i)
         {
-            if (j < params.cols)
-            {
-                cout << " " << (char)('a' + j);
-            }
-            else
-            {
-                cout << "  ";
-            }
+            cout << '-';
         }
-
-        cout << " |";
-
-        // 第二组5列
-        for (int j = 5; j < 10; j++)
+        cout << "--+";
+        for (int j = 0; j < params.cols; j++)
         {
-            if (j < params.cols)
-            {
-                cout << " " << (char)('a' + j);
-            }
-            else
-            {
-                cout << "  ";
-            }
+            if (j > 0 && j % 5 == 0)
+                cout << "-+";
+            cout << "--";
         }
+        cout << "-+" << endl;
 
+        // 打印列标签行
+        cout << setw(maxRowHintWidth + 2) << " " << "  |";
+        for (int j = 0; j < params.cols; j++)
+        {
+            if (j > 0 && j % 5 == 0)
+                cout << " |";
+            cout << " " << static_cast<char>('a' + j);
+        }
         cout << " |" << endl;
 
-        // 显示行提示区域和矩阵的分隔线
-        for (int i = 0; i < hint_width - 1; i++)
+        // 打印列标签下的分隔线
+        for (int i = 0; i < maxRowHintWidth + 2; ++i)
         {
-            cout << "-";
+            cout << '-';
         }
-        cout << "---+-+-----------+-----------+" << endl;
+        cout << "+-+";
+        for (int j = 0; j < params.cols; j++)
+        {
+            if (j > 0 && j % 5 == 0)
+                cout << "-+";
+            cout << "--";
+        }
+        cout << "-+" << endl;
 
         // 显示矩阵内容和行提示
         for (int i = 0; i < params.rows; i++)
         {
-            // 显示行提示，右对齐
+            // 生成行提示字符串
             string row_hint_str = "";
             for (int h = 0; h < matrix.row_hint_count[i]; h++)
             {
-                row_hint_str += to_string(matrix.row_hints[i][h]) + " ";
+                if (h > 0)
+                    row_hint_str += " ";
+                row_hint_str += to_string(matrix.row_hints[i][h]);
             }
 
-            // 确保行提示区域宽度一致
-            cout << setw(hint_width) << right << row_hint_str << " |";
+            // 显示行提示，右对齐
+            cout << " " << setw(maxRowHintWidth) << row_hint_str << " |"
+                 << static_cast<char>('A' + i) << "|";
 
-            // 显示行标题（A,B,C,...）
-            cout << (char)('A' + i) << "|";
-
-            // 第一组5列
-            for (int j = 0; j < 5; j++)
+            // 显示数据
+            for (int j = 0; j < params.cols; j++)
             {
-                if (j < params.cols)
+                if (j > 0 && j % 5 == 0)
+                    cout << " |";
+
+                // 根据单元格状态显示内容
+                if (matrix.cells[i][j] == EMPTY)
                 {
-                    if (matrix.cells[i][j] == EMPTY)
+                    if (params.cheat_mode && matrix.solution[i][j])
                     {
-                        if (params.cheat_mode && matrix.solution[i][j])
-                        {
-                            cout << " O"; // 作弊模式显示普通的O
-                        }
-                        else
-                            cout << "  ";
-                    }
-                    else if (matrix.cells[i][j] == MARKED)
-                    {
-                        cct_setcolor(COLOR_BLACK, COLOR_HGREEN); // 用户标记为绿色高亮
+                        // 作弊模式下显示有球的位置
+                        cct_setcolor(COLOR_HBLACK, COLOR_BLACK);
                         cout << " O";
                         cct_setcolor(); // 恢复默认颜色
                     }
-                    else if (matrix.cells[i][j] == MARKED_WRONG)
+                    else
                     {
-                        cct_setcolor(COLOR_BLACK, COLOR_HRED); // 错误标记为红色高亮
-                        cout << " X";
-                        cct_setcolor(); // 恢复默认颜色
-                    }
-                    else if (matrix.cells[i][j] == MARKED_NOT)
-                    {
-                        cct_setcolor(COLOR_BLACK, COLOR_HBLUE); // 标记为不存在为蓝色高亮
-                        cout << " ·";
-                        cct_setcolor(); // 恢复默认颜色
+                        cout << "  "; // 空白
                     }
                 }
-                else
+                else if (matrix.cells[i][j] == MARKED)
                 {
-                    cout << "  ";
-                }
-            }
-
-            cout << " |";
-
-            // 第二组5列
-            for (int j = 5; j < 10; j++)
-            {
-                if (j < params.cols)
-                {
-                    if (matrix.cells[i][j] == EMPTY)
+                    // 用户标记为有球
+                    if (params.cheat_mode)
                     {
-                        if (params.cheat_mode && matrix.solution[i][j])
+                        if (matrix.solution[i][j])
                         {
-                            cout << " O"; // 作弊模式显示普通的O
+                            // 标记正确
+                            cct_setcolor(COLOR_BLUE, COLOR_WHITE);
+                            cout << " O";
                         }
                         else
-                            cout << "  ";
+                        {
+                            // 标记错误
+                            cct_setcolor(COLOR_RED, COLOR_WHITE);
+                            cout << " O";
+                        }
                     }
-                    else if (matrix.cells[i][j] == MARKED)
+                    else
                     {
-                        cct_setcolor(COLOR_BLACK, COLOR_HGREEN); // 用户标记为绿色高亮
+                        // 普通模式下的标记
+                        cct_setcolor(COLOR_BLUE, COLOR_WHITE);
                         cout << " O";
-                        cct_setcolor(); // 恢复默认颜色
                     }
-                    else if (matrix.cells[i][j] == MARKED_WRONG)
-                    {
-                        cct_setcolor(COLOR_BLACK, COLOR_HRED); // 错误标记为红色高亮
-                        cout << " X";
-                        cct_setcolor(); // 恢复默认颜色
-                    }
-                    else if (matrix.cells[i][j] == MARKED_NOT)
-                    {
-                        cct_setcolor(COLOR_BLACK, COLOR_HBLUE); // 标记为不存在为蓝色高亮
-                        cout << " ·";
-                        cct_setcolor(); // 恢复默认颜色
-                    }
+                    cct_setcolor(); // 恢复默认颜色
                 }
-                else
+                else if (matrix.cells[i][j] == MARKED_NOT)
                 {
-                    cout << "  ";
+                    // 用户标记为无球
+                    if (params.cheat_mode)
+                    {
+                        if (!matrix.solution[i][j])
+                        {
+                            // 标记正确
+                            cct_setcolor(COLOR_RED, COLOR_WHITE);
+                            cout << " X";
+                        }
+                        else
+                        {
+                            // 标记错误
+                            cct_setcolor(COLOR_BLUE, COLOR_WHITE);
+                            cout << " X";
+                        }
+                    }
+                    else
+                    {
+                        // 普通模式下的标记
+                        cct_setcolor(COLOR_RED, COLOR_WHITE);
+                        cout << " X";
+                    }
+                    cct_setcolor(); // 恢复默认颜色
                 }
             }
-
             cout << " |" << endl;
 
             // 每5行添加一个分隔线
             if ((i + 1) % 5 == 0 && i < params.rows - 1)
             {
-                for (int k = 0; k < hint_width - 1; k++)
+                for (int i = 0; i < maxRowHintWidth + 2; ++i)
                 {
-                    cout << "-";
+                    cout << '-';
                 }
-                cout << "---+-+-----------+-----------+" << endl;
+                cout << "+-+";
+                for (int j = 0; j < params.cols; j++)
+                {
+                    if (j > 0 && j % 5 == 0)
+                        cout << "-+";
+                    cout << "--";
+                }
+                cout << "-+" << endl;
             }
         }
 
         // 显示底部边框
-        for (int i = 0; i < hint_width - 1; i++)
+        for (int i = 0; i < maxRowHintWidth + 2; ++i)
         {
-            cout << "-";
+            cout << '-';
         }
-        cout << "---+-+-----------+-----------+" << endl;
+        cout << "+-+";
+        for (int j = 0; j < params.cols; j++)
+        {
+            if (j > 0 && j % 5 == 0)
+                cout << "-+";
+            cout << "--";
+        }
+        cout << "-+" << endl;
 
-        // 显示当前作弊模式状态
-        cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl;
+        // 显示当前作弊模式状态和操作说明
+        cout << "当前" << (params.cheat_mode ? "已开启" : "未开启") << "作弊模式" << endl << endl;
+        cout << "命令说明：" << endl;
+        cout << "  Aa  - 标记位置(A行a列)为有球，再次输入相同位置则取消标记" << endl;
+        cout << "  Aa# - 标记位置(A行a列)为无球，再次输入相同位置则取消标记" << endl;
+        cout << "  X/x - 退出游戏" << endl;
+        cout << "  Y/y - 提交答案" << endl;
+        cout << "  Z/z - 切换作弊模式" << endl;
 
         // 用户输入
-        cout << "\n命令形式：Aa=等价于图形游戏中鼠标左键选择Aa位(区分大小写)" << endl;
-        cout << "         不需要支持图形界面的右键打叉，再次输入Aa相当于清除" << endl;
-        cout << "         X/x=退出(新行仅有X/x，不分大小写)" << endl;
-        cout << "         Y/y=提交(新行仅有Y/y，不分大小写)" << endl;
-        cout << "         Z/z=作弊(新行仅有Z/z，不分大小写)" << endl;
-        cout << "输入命令：";
-        char input[10];
-        cin >> input;
+        cout << "\n请输入命令：";
+        string cmd;
+        getline(cin, cmd);
 
-        // 检查输入
-        if ((input[0] == 'X' || input[0] == 'x') && input[1] == '\0')
+        // 处理输入命令
+        if (cmd.length() == 0)
         {
-            game_over = true;
+            continue; // 空命令，继续
         }
-        else if ((input[0] == 'Y' || input[0] == 'y') && input[1] == '\0')
+        else if (cmd.length() == 1)
         {
-            // 验证解答
-            int error_row, error_col;
-            if (validate_solution(matrix, params, error_row, error_col))
+            char c = toupper(cmd[0]);
+            if (c == 'X')
             {
-                cout << "恭喜！你的解答正确！" << endl;
-                game_over = true;
-                system("pause");
+                game_over = true; // 退出
+                continue;
             }
-            else
+            else if (c == 'Y')
             {
-                cout << "解答错误，第一个错误位置：" << (char)('A' + error_row)
-                     << (char)('a' + error_col) << endl;
+                // 提交答案
+                int error_row, error_col;
+                if (validate_solution(matrix, params, error_row, error_col))
+                {
+                    cout << "\n恭喜！你的解答正确！" << endl;
+                    game_over = true;
+                    system("pause");
+                    continue;
+                }
+                else
+                {
+                    cout << "\n解答错误，第一个错误位置：" << (char)('A' + error_row)
+                         << (char)('a' + error_col) << " (" << error_row + 1 << "," << error_col + 1
+                         << ")" << endl;
+                    system("pause");
+                    continue;
+                }
+            }
+            else if (c == 'Z')
+            {
+                // 切换作弊模式
+                params.cheat_mode = !params.cheat_mode;
+                cout << "\n已" << (params.cheat_mode ? "开启" : "关闭") << "作弊模式" << endl;
                 system("pause");
+                continue;
             }
         }
-        else if ((input[0] == 'Z' || input[0] == 'z') && input[1] == '\0')
+        else if (cmd.length() >= 2)
         {
-            // 切换作弊模式
-            params.cheat_mode = !params.cheat_mode;
-            cout << (params.cheat_mode ? "已开启" : "已关闭") << "作弊模式" << endl;
-            system("pause");
-        }
-        else if (input[0] >= 'A' && input[0] <= 'A' + params.rows - 1 && input[1] >= 'a' &&
-                 input[1] <= 'a' + params.cols - 1)
-        {
-            // 解析坐标
-            int row = input[0] - 'A';
-            int col = input[1] - 'a';
+            // 处理坐标输入
+            char row_char = cmd[0];
+            char col_char = cmd[1];
 
-            // 检查坐标有效性
-            if (row >= 0 && row < params.rows && col >= 0 && col < params.cols)
+            // 检查是否为有效的行列标识
+            if (row_char >= 'A' && row_char < 'A' + params.rows && col_char >= 'a' &&
+                col_char < 'a' + params.cols)
             {
-                // 标记或取消标记
-                mark_cell(matrix, params, row, col, 1);
+                int row = row_char - 'A';
+                int col = col_char - 'a';
+
+                // 检查是否为标记无球命令
+                bool mark_empty = (cmd.length() > 2 && cmd[2] == '#');
+
+                // 更新标记
+                if (mark_empty)
+                {
+                    // 标记为无球或取消标记
+                    if (matrix.cells[row][col] == MARKED_NOT)
+                        matrix.cells[row][col] = EMPTY; // 取消标记
+                    else
+                        matrix.cells[row][col] = MARKED_NOT; // 标记为无球
+                }
+                else
+                {
+                    // 标记为有球或取消标记
+                    if (matrix.cells[row][col] == MARKED)
+                        matrix.cells[row][col] = EMPTY; // 取消标记
+                    else
+                        matrix.cells[row][col] = MARKED; // 标记为有球
+                }
+
+                continue;
             }
         }
+
+        // 无效命令
+        cout << "\n无效命令，请重试" << endl;
+        system("pause");
     }
 }
 
@@ -491,57 +536,69 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
             {
                 last_mx = mx;
                 last_my = my;
-                cct_gotoxy(0, bottom_y + 4);
-                cout << "[DEBUG] mx=" << mx << " my=" << my << " btn=" << btn << " evt=" << evt
-                     << "      ";
+
+                // 显示鼠标位置信息
                 display_mouse_position(mx, my, params);
 
+                // 转换鼠标坐标为矩阵单元格坐标
                 int row, col;
                 bool is_valid;
                 convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
 
+                // 显示单元格信息
+                cct_gotoxy(0, bottom_y + 2);
                 if (is_valid)
                 {
-                    cct_gotoxy(0, bottom_y + 2);
-                    cout << "当前单元格: " << (char)('A' + row) << (col + 1) << "                ";
+                    cout << "当前单元格: " << (char)('A' + row) << (char)('a' + col) << " ("
+                         << row + 1 << "," << col + 1 << ")           ";
                 }
                 else
                 {
-                    cct_gotoxy(0, bottom_y + 2);
-                    cout << "                                  ";
+                    cout << "当前位置: 不在有效单元格内                     ";
                 }
             }
-            // 只要有按钮按下就处理为点击
+
+            // 处理鼠标点击事件
             if (btn != 0)
             {
                 int row, col;
                 bool is_valid;
                 convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
-                cct_gotoxy(0, bottom_y + 3);
-                cout << "[DEBUG] btn=" << btn << " evt=" << evt << " mx=" << mx << " my=" << my
-                     << " row=" << row << " col=" << col << " is_valid=" << is_valid << "      ";
+
                 if (is_valid)
                 {
-                    int markType = (btn & FROM_LEFT_1ST_BUTTON_PRESSED) ? 1 : 2;
-
-                    // 修改：左键标记为O，右键只消除左键做的标记
-                    if (markType == 1) // 左键点击
+                    // 左键标记为有球，右键标记为无球
+                    if (btn & FROM_LEFT_1ST_BUTTON_PRESSED)
                     {
-                        // 左键标记为O
-                        matrix.cells[row][col] = MARKED;
-                    }
-                    else if (markType == 2) // 右键点击
-                    {
-                        // 右键只消除左键做的标记，如果当前是MARKED状态则清除，否则不做任何操作
-                        if (matrix.cells[row][col] == MARKED)
+                        // 左键点击 - 标记为有球
+                        if (matrix.cells[row][col] == EMPTY)
                         {
+                            matrix.cells[row][col] = MARKED;
+                        }
+                        else if (matrix.cells[row][col] == MARKED)
+                        {
+                            // 如果已经标记，则取消标记
+                            matrix.cells[row][col] = EMPTY;
+                        }
+                    }
+                    else if (btn & RIGHTMOST_BUTTON_PRESSED)
+                    {
+                        // 右键点击 - 标记为无球
+                        if (matrix.cells[row][col] == EMPTY)
+                        {
+                            matrix.cells[row][col] = MARKED_NOT;
+                        }
+                        else if (matrix.cells[row][col] == MARKED_NOT)
+                        {
+                            // 如果已经标记为无球，则取消标记
                             matrix.cells[row][col] = EMPTY;
                         }
                     }
 
-                    // 刷新单元格显示
+                    // 刷新游戏界面
                     display_game_graphic(matrix, params);
 
+                    // 重新显示操作提示
                     cct_setcolor();
                     cct_gotoxy(0, bottom_y);
                     cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"
@@ -564,8 +621,13 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                 }
                 else if (keycode1 == 'z' || keycode1 == 'Z')
                 {
+                    // 切换作弊模式
                     params.cheat_mode = !params.cheat_mode;
+
+                    // 刷新游戏界面
                     display_game_graphic(matrix, params);
+
+                    // 显示模式切换提示
                     cct_setcolor();
                     cct_gotoxy(0, bottom_y);
                     cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，Z键"
@@ -581,9 +643,11 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                 }
                 else if (keycode1 == '\r')
                 {
+                    // 验证解答
                     int error_row, error_col;
                     if (validate_solution(matrix, params, error_row, error_col))
                     {
+                        // 解答正确
                         cct_gotoxy(0, bottom_y + 3);
                         cout << "恭喜！你的解答正确！" << endl;
                         game_over = true;
@@ -591,31 +655,37 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     }
                     else
                     {
+                        // 解答错误，高亮显示错误位置
                         cct_gotoxy(0, bottom_y + 3);
                         cout << "解答错误，第一个错误位置：" << (char)('A' + error_row)
-                             << (error_col + 1) << "      " << endl;
-                        int cell_width = params.has_separators ? 5 : 2;
-                        int cell_height = params.has_separators ? 3 : 1;
-                        int hint_width = matrix.hint_width * 2;
-                        int hint_height = matrix.hint_height;
+                             << (char)('a' + error_col) << " (" << error_row + 1 << ","
+                             << error_col + 1 << ")      " << endl;
+
+                        // 计算错误位置的屏幕坐标
                         int matrix_x = 5 + hint_width;
                         int matrix_y = 3 + hint_height;
+
+                        // 闪烁显示错误位置
                         for (int i = 0; i < 3; i++)
                         {
                             int x = matrix_x + error_col * cell_width;
                             int y = matrix_y + error_row * cell_height;
+
+                            // 调整到单元格中心位置
                             if (params.has_separators)
                             {
-                                x += 2;
-                                y += 1;
+                                x += 2; // 单元格中心
+                                y += 1; // 单元格中心
                             }
                             else
                             {
-                                x += 1;
-                                y += 1;
+                                x += 1; // 单元格中心
+                                y += 0; // 单元格中心
                             }
+
+                            // 闪烁显示错误标记
                             cct_gotoxy(x, y);
-                            cct_setcolor(COLOR_BLACK, COLOR_HRED);
+                            cct_setcolor(COLOR_WHITE, COLOR_RED);
                             cout << "X";
                             Sleep(300);
                             cct_gotoxy(x, y);
@@ -623,6 +693,8 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                             cout << " ";
                             Sleep(300);
                         }
+
+                        // 恢复游戏界面
                         display_game_graphic(matrix, params);
                         cct_setcolor();
                         cct_gotoxy(0, bottom_y);
@@ -697,38 +769,56 @@ void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
             DWORD btn = me.dwButtonState;
             DWORD evt = me.dwEventFlags;
 
+            // 只有坐标变化时刷新显示，减少闪烁
             if (mx != last_mx || my != last_my)
             {
                 last_mx = mx;
                 last_my = my;
-                cct_gotoxy(0, bottom_y + 4);
-                cout << "[DEBUG] mx=" << mx << " my=" << my << " btn=" << btn << " evt=" << evt
-                     << "      ";
+
+                // 显示鼠标位置信息
                 display_mouse_position(mx, my, params);
+
+                // 转换鼠标坐标为矩阵单元格坐标
                 int row, col;
                 bool is_valid;
                 convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+
+                // 显示单元格信息
+                cct_gotoxy(0, bottom_y + 2);
                 if (is_valid)
                 {
-                    cct_gotoxy(0, bottom_y + 2);
-                    cout << "当前单元格: " << (char)('A' + row) << (col + 1) << "                ";
+                    cout << "当前单元格: " << (char)('A' + row) << (char)('a' + col) << " ("
+                         << row + 1 << "," << col + 1 << ")           ";
+
+                    // 显示单元格内容信息
+                    cout << " | 内容: ";
+                    if (matrix.solution[row][col])
+                    {
+                        cout << "有球";
+                    }
+                    else
+                    {
+                        cout << "无球";
+                    }
                 }
                 else
                 {
-                    cct_gotoxy(0, bottom_y + 2);
-                    cout << "                                  ";
+                    cout << "当前位置: 不在有效单元格内                     ";
                 }
             }
-            // 只要有按钮按下就处理为点击
+
+            // 处理鼠标点击事件
             if (btn != 0)
             {
                 int row, col;
                 bool is_valid;
                 convert_mouse_to_cell(mx, my, row, col, params, matrix, is_valid);
+
                 if (is_valid)
                 {
                     cct_gotoxy(0, bottom_y + 3);
-                    cout << "[DEBUG] 检测到点击 btn=" << btn << " evt=" << evt << "      ";
+                    cout << "检测到点击: 位置=" << (char)('A' + row) << (char)('a' + col)
+                         << " 内容=" << (matrix.solution[row][col] ? "有球" : "无球") << "      ";
                 }
             }
         }

@@ -210,12 +210,14 @@ void display_hints_text(const GameMatrix &matrix, const GameParams &params)
     for (int i = 0; i < params.rows; i++)
     {
         // 生成行提示字符串
-        string row_hint_str = "";
+        char row_hint_str[MAX_MATRIX_SIZE * 4] = "";
+        char temp[8];
         for (int h = 0; h < matrix.row_hint_count[i]; h++)
         {
             if (h > 0)
-                row_hint_str += " ";
-            row_hint_str += to_string(matrix.row_hints[i][h]);
+                strcat(row_hint_str, " ");
+            sprintf(temp, "%d", matrix.row_hints[i][h]);
+            strcat(row_hint_str, temp);
         }
 
         // 显示行提示，右对齐

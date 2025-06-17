@@ -154,14 +154,16 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         char tempStr[MAX_MATRIX_SIZE * 4] = "";
         for (int i = 0; i < params.rows; i++)
         {
-            string hint_str = "";
+            char hint_str[MAX_MATRIX_SIZE * 4] = "";
+            char temp[8];
             for (int h = 0; h < matrix.row_hint_count[i]; h++)
             {
                 if (h > 0)
-                    hint_str += " ";
-                hint_str += to_string(matrix.row_hints[i][h]);
+                    strcat(hint_str, " ");
+                sprintf(temp, "%d", matrix.row_hints[i][h]);
+                strcat(hint_str, temp);
             }
-            maxRowHintWidth = max(maxRowHintWidth, (int)hint_str.length());
+            maxRowHintWidth = max(maxRowHintWidth, (int)strlen(hint_str));
         }
 
         // 计算列提示栏最大高度
@@ -251,12 +253,14 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
         for (int i = 0; i < params.rows; i++)
         {
             // 生成行提示字符串
-            string row_hint_str = "";
+            char row_hint_str[MAX_MATRIX_SIZE * 4] = "";
+            char temp[8];
             for (int h = 0; h < matrix.row_hint_count[i]; h++)
             {
                 if (h > 0)
-                    row_hint_str += " ";
-                row_hint_str += to_string(matrix.row_hints[i][h]);
+                    strcat(row_hint_str, " ");
+                sprintf(temp, "%d", matrix.row_hints[i][h]);
+                strcat(row_hint_str, temp);
             }
 
             // 显示行提示，右对齐
@@ -382,15 +386,15 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
 
         // 用户输入
         cout << "\n请输入命令：";
-        string cmd;
-        getline(cin, cmd);
+        char cmd[64];
+        cin.getline(cmd, 64);
 
         // 处理输入命令
-        if (cmd.length() == 0)
+        if (strlen(cmd) == 0)
         {
             continue; // 空命令，继续
         }
-        else if (cmd.length() == 1)
+        else if (strlen(cmd) == 1)
         {
             char c = toupper(cmd[0]);
             if (c == 'X')
@@ -427,7 +431,7 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                 continue;
             }
         }
-        else if (cmd.length() >= 2)
+        else if (strlen(cmd) >= 2)
         {
             // 处理坐标输入
             char row_char = cmd[0];
@@ -441,7 +445,7 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                 int col = col_char - 'a';
 
                 // 检查是否为标记无球命令
-                bool mark_empty = (cmd.length() > 2 && cmd[2] == '#');
+                bool mark_empty = (strlen(cmd) > 2 && cmd[2] == '#');
 
                 // 更新标记
                 if (mark_empty)

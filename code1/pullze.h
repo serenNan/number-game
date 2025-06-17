@@ -2,10 +2,10 @@
 #include "cmd_console_tools.h"
 #include <conio.h>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
 #include <iomanip>
 #include <iostream>
-#include <string>
 
 using namespace std;
 

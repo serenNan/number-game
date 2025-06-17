@@ -461,7 +461,8 @@ void play_game_text_mode(GameMatrix &matrix, GameParams &params)
                     // 标记为有球或取消标记
                     if (matrix.cells[row][col] == MARKED)
                         matrix.cells[row][col] = EMPTY; // 取消标记
-                    else
+                    else if (matrix.cells[row][col] == EMPTY ||
+                             matrix.cells[row][col] == MARKED_NOT)
                         matrix.cells[row][col] = MARKED; // 标记为有球
                 }
 
@@ -575,7 +576,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     if (btn & FROM_LEFT_1ST_BUTTON_PRESSED)
                     {
                         // 左键点击 - 标记为有球
-                        if (matrix.cells[row][col] == EMPTY)
+                        if (matrix.cells[row][col] == EMPTY || matrix.cells[row][col] == MARKED_NOT)
                         {
                             matrix.cells[row][col] = MARKED;
                         }
@@ -588,7 +589,8 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     else if (btn & RIGHTMOST_BUTTON_PRESSED)
                     {
                         // 右键点击 - 标记为无球
-                        if (matrix.cells[row][col] == EMPTY)
+                        if (matrix.cells[row][col] == EMPTY || matrix.cells[row][col] == MARKED ||
+                            matrix.cells[row][col] == MARKED_WRONG)
                         {
                             matrix.cells[row][col] = MARKED_NOT;
                         }

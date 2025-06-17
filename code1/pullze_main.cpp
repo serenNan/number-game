@@ -92,7 +92,7 @@ int main()
                 init_game(matrix, params);
                 generate_matrix(matrix, params);
                 calculate_hints(matrix, params);
-                display_game_graphic(matrix, params);
+                display_game_graphic(matrix, params, true);
                 cout << "请按任意键继续...";
                 _getch();
             }
@@ -141,7 +141,7 @@ int main()
                 init_game(matrix, params);
                 generate_matrix(matrix, params);
                 calculate_hints(matrix, params);
-                display_game_graphic(matrix, params);
+                display_game_graphic(matrix, params, true);
                 cout << "请按任意键继续...";
                 _getch();
             }

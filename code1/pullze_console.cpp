@@ -601,13 +601,17 @@ void display_matrix_graphic(const GameMatrix &matrix, const GameParams &params)
   功    能：图形模式下显示完整游戏界面
   输入参数：const GameMatrix& matrix - 游戏矩阵
             const GameParams& params - 游戏参数
+            bool clear_screen - 是否清屏，默认为true
   返 回 值：无
   说    明：图形模式下显示行列标识、矩阵内容和提示栏
 ***************************************************************************/
-void display_game_graphic(const GameMatrix &matrix, const GameParams &params)
+void display_game_graphic(const GameMatrix &matrix, const GameParams &params, bool clear_screen)
 {
     // 清屏
-    cct_cls();
+    if (clear_screen)
+    {
+        cct_cls();
+    }
 
     // 设置单元格大小
     int cell_width = params.has_separators ? 5 : 2; // 有分隔线时每个单元格占5列，否则占2列

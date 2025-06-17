@@ -62,7 +62,8 @@ void mark_cell(GameMatrix &matrix, const GameParams &params, int row, int col, i
 void display_matrix_text(const GameMatrix &matrix, const GameParams &params);
 void display_hints_text(const GameMatrix &matrix, const GameParams &params);
 void display_matrix_graphic(const GameMatrix &matrix, const GameParams &params);
-void display_game_graphic(const GameMatrix &matrix, const GameParams &params);
+void display_game_graphic(const GameMatrix &matrix, const GameParams &params,
+                          bool clear_screen = true);
 void display_cell(int x, int y, CellStatus status, bool has_separators);
 void display_mouse_position(int mx, int my, const GameParams &params);
 void convert_mouse_to_cell(int mx, int my, int &row, int &col, const GameParams &params,

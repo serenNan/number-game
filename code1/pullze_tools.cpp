@@ -601,8 +601,52 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                         }
                     }
 
-                    // 刷新游戏界面
-                    display_game_graphic(matrix, params);
+                    // 只更新单元格，不清屏重绘整个界面
+                    int matrix_x = 5 + hint_width;
+                    int matrix_y = 3 + hint_height;
+                    int x = matrix_x + col * cell_width + 1;  // 单元格左上角
+                    int y = matrix_y + row * cell_height + 1; // 单元格左上角
+
+                    // 根据作弊模式状态显示单元格
+                    if (params.cheat_mode)
+                    {
+                        // 作弊模式下的显示逻辑
+                        if (matrix.solution[row][col]) // 有球
+                        {
+                            if (matrix.cells[row][col] == EMPTY) // 有球但尚未选择
+                            {
+                                display_cell(x, y, CHEAT_EMPTY, params.has_separators);
+                            }
+                            else if (matrix.cells[row][col] == MARKED) // 有球且已左键选择
+                            {
+                                display_cell(x, y, CHEAT_MARKED, params.has_separators);
+                            }
+                            else if (matrix.cells[row][col] == MARKED_NOT) // 有球但已右键标注
+                            {
+                                display_cell(x, y, CHEAT_BALL_RIGHT, params.has_separators);
+                            }
+                        }
+                        else // 无球
+                        {
+                            if (matrix.cells[row][col] == MARKED) // 无球但已左键选择
+                            {
+                                display_cell(x, y, CHEAT_WRONG, params.has_separators);
+                            }
+                            else if (matrix.cells[row][col] == MARKED_NOT) // 无球且右键标注
+                            {
+                                display_cell(x, y, CHEAT_NOT_RIGHT, params.has_separators);
+                            }
+                            else // 无球且未选择
+                            {
+                                display_cell(x, y, EMPTY, params.has_separators);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // 正常模式下的显示逻辑
+                        display_cell(x, y, matrix.cells[row][col], params.has_separators);
+                    }
 
                     // 重新显示操作提示
                     cct_setcolor();
@@ -630,7 +674,7 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                     // 切换作弊模式
                     params.cheat_mode = !params.cheat_mode;
 
-                    // 刷新游戏界面
+                    // 刷新游戏界面（切换模式时需要完全重绘）
                     display_game_graphic(matrix, params);
 
                     // 显示模式切换提示
@@ -700,8 +744,57 @@ void play_game_graphic_mode(GameMatrix &matrix, GameParams &params)
                             Sleep(300);
                         }
 
-                        // 恢复游戏界面
-                        display_game_graphic(matrix, params);
+                        // 恢复单元格显示，而不是重绘整个界面
+                        int x = matrix_x + error_col * cell_width + 1;  // 单元格左上角
+                        int y = matrix_y + error_row * cell_height + 1; // 单元格左上角
+
+                        // 重新显示错误单元格
+                        if (params.cheat_mode)
+                        {
+                            // 作弊模式下的显示逻辑
+                            if (matrix.solution[error_row][error_col]) // 有球
+                            {
+                                if (matrix.cells[error_row][error_col] == EMPTY) // 有球但尚未选择
+                                {
+                                    display_cell(x, y, CHEAT_EMPTY, params.has_separators);
+                                }
+                                else if (matrix.cells[error_row][error_col] ==
+                                         MARKED) // 有球且已左键选择
+                                {
+                                    display_cell(x, y, CHEAT_MARKED, params.has_separators);
+                                }
+                                else if (matrix.cells[error_row][error_col] ==
+                                         MARKED_NOT) // 有球但已右键标注
+                                {
+                                    display_cell(x, y, CHEAT_BALL_RIGHT, params.has_separators);
+                                }
+                            }
+                            else // 无球
+                            {
+                                if (matrix.cells[error_row][error_col] ==
+                                    MARKED) // 无球但已左键选择
+                                {
+                                    display_cell(x, y, CHEAT_WRONG, params.has_separators);
+                                }
+                                else if (matrix.cells[error_row][error_col] ==
+                                         MARKED_NOT) // 无球且右键标注
+                                {
+                                    display_cell(x, y, CHEAT_NOT_RIGHT, params.has_separators);
+                                }
+                                else // 无球且未选择
+                                {
+                                    display_cell(x, y, EMPTY, params.has_separators);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // 正常模式下的显示逻辑
+                            display_cell(x, y, matrix.cells[error_row][error_col],
+                                         params.has_separators);
+                        }
+
+                        // 重新显示操作提示
                         cct_setcolor();
                         cct_gotoxy(0, bottom_y);
                         cout << "操作说明：左键标记球存在，右键标记球不存在，Enter键提交，Q键退出，"
@@ -746,7 +839,7 @@ void show_mouse_position_mode(GameMatrix &matrix, GameParams &params)
     cct_enable_mouse();
 
     // 绘制初始游戏界面
-    display_game_graphic(matrix, params);
+    display_game_graphic(matrix, params, true);
 
     // 计算表格底部位置
     int cell_width = params.has_separators ? 5 : 2;
